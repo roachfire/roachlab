@@ -1,0 +1,102 @@
+version: "3.4"
+services:
+
+  transmission:
+    image: haugene/transmission-openvpn
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    restart: always
+    ports:
+      - "9091:9091"
+      # - "8888:8888" # proxy support
+    volumes:
+      - ${ROOT}/downloads:/downloads # downloads folder
+      - ${ROOT}/config/transmission:/config # config files
+    environment:
+      - OPENVPN_PROVIDER=MULLVAD
+      - OPENVPN_USERNAME=123456789 #enter your Mullvad account number here
+      - OPENVPN_PASSWORD=m
+      - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
+      - LOCAL_NETWORK=192.168.20.0/24 #configure your local network to broadcast transmission
+     sysctls:
+        - "net.ipv6.conf.all.disable_ipv6=0"
+
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${ROOT}/downloads/torrent-blackhole:/downloads # place where to put .torrent files for manual download
+      - ${ROOT}/config/jackett:/config # config files
+
+  nzbget:
+    container_name: nzbget
+    image: linuxserver/nzbget:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+    volumes:
+      - ${ROOT}/downloads:/downloads # download folder
+      - ${ROOT}/config/nzbget:/config # config files
+
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${ROOT}/config/sonarr:/config # config files
+      - ${ROOT}/complete/tv:/tv # tv shows folder
+      - ${ROOT}/downloads:/downloads # download folder
+
+  radarr:
+    container_name: radarr
+    image: linuxserver/radarr:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${ROOT}/config/radarr:/config # config files
+      - ${ROOT}/complete/movies:/movies # movies folder
+      - ${ROOT}/downloads:/downloads # download folder
+
+  plex-server:
+    container_name: plex-server
+    image: plexinc/pms-docker:latest
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ} # timezone, defined in .env
+    network_mode: host
+    volumes:
+      - ${ROOT}/config/plex/db:/config # plex database
+      - ${ROOT}/config/plex/transcode:/transcode # temp transcoded files
+      - ${ROOT}/complete:/data # media library
+
+  bazarr:
+    container_name: bazarr
+    image: linuxserver/bazarr
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
