@@ -20,7 +20,7 @@ services:
       - OPENVPN_PASSWORD=m
       - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
       - LOCAL_NETWORK=192.168.20.0/24 #configure your local network to broadcast transmission
-     sysctls:
+    sysctls:
         - "net.ipv6.conf.all.disable_ipv6=0"
 
   jackett:
