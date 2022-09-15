@@ -1,1 +1,1 @@
-
+This project was originally a fork of a project by sebgl, but I experienced numerous issues in deployment. This was mainly because the documentation was lacking clarity in some places. Of course, this lack of clarity was most likely due to my lack of knowledge on the topic. Nevertheless, here I plan on taking the foundations put in place by sebgl and creating a more modular and easy-to-use guide for deploying a HTPC in your homelab. WIP
