@@ -14,7 +14,7 @@ services:
     volumes:
       - ${ROOT}/downloads:/downloads # downloads folder
       - ${ROOT}/config/transmission:/config # config files
-      - ${ROOT}/downloads/torrent-blackhole:/watch # downloads folder
+      - ${ROOT}/downloads/torrent-blackhole:/watch # folder for tranmission to watch for .magnet files to automatically download
     environment:
       - OPENVPN_PROVIDER=MULLVAD
       - OPENVPN_USERNAME=123456789 #enter your Mullvad account number here
