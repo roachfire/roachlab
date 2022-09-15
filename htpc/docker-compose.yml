@@ -14,6 +14,7 @@ services:
     volumes:
       - ${ROOT}/downloads:/downloads # downloads folder
       - ${ROOT}/config/transmission:/config # config files
+      - ${ROOT}/downloads/torrent-blackhole:/watch # downloads folder
     environment:
       - OPENVPN_PROVIDER=MULLVAD
       - OPENVPN_USERNAME=123456789 #enter your Mullvad account number here
