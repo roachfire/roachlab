@@ -1,6 +1,20 @@
 version: "3.4"
 services:
 
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - {ROOT}/config/heimdall:/config
+    ports:
+      - 1080:80
+      - 8443:443
+    restart: unless-stopped
+
   transmission:
     image: haugene/transmission-openvpn
     cap_add:
