@@ -18,8 +18,10 @@ The next things are required for this setup to work.
 ## Creating our directories
 The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`.
 
-## Setting up our docker-compose.yml and .env
-You can either copy and paste from the docker-compose.yml and .env files in this repo or you can download them directly. I recommend downloading the repo as it will also give you all of the configuration files I provide (once I add them) set up and ready to go. This can be done with `git clone https://github.com/roachfire/roachlab/htpc.git`. You might have to install git first: `sudo apt install git`. Now, cd into the roachlab directory: `cd /roachlab` 
+## Setting up our .env and docker-compose.yml
+You can either copy and paste from the docker-compose.yml and .env files in this repo or you can download them directly. I recommend downloading the repo as it will also give you all of the configuration files I provide (once I add them) set up and ready to go. This can be done with `git clone https://github.com/roachfire/roachlab/htpc.git`. You might have to install git first: `sudo apt install git`. Now, cd into the roachlabhtpc directory: `cd /roachlab/htpc/`. If you don't plan on following the rest of the RoachLab setup guides, feel free to `mv` the /htpc/ directory to another location and `rm` the rest of the repo from your device. 
+
+Now that we're in the directory, we need to set up our .env file. Go ahead and `sudo nano .env` into the file. Once there, you'll need to change the values for TZ, ROOT, and SRVR to ones that fit your setup. Values for TZ can be found here and the ROOT and SRVR values will be the directories you created previously. You can change the PUID and PGID if you want, but it's not necessary. 
 
 
 
