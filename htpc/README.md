@@ -8,6 +8,7 @@ These are some recommendations that might make things a little easier for you, b
 - A service like Tailscale to allow you to remotely manage your services (and facilitate secure remote streaming). You can find installation documentation for your OS [here](https://tailscale.com/download/). 
 - [Plex Pass](https://www.plex.tv/plex-pass/). This is Plex's Premium service that gives you access to useful features like unlimited mobile clients, hardware acceleration (useful for HDR tonemapping and transcoding), etc. The pricing isn't all that bad either. 
 - A decent graphics card or a CPU that supports Intel Quicksync. If you're transcoding large streams with a lot of data per frame, you're going to want one of these things to help speed things up. 
+- A debian-based machine for your Docker host. I run my services on a Ubuntu Server host, so this tutorial was designed for that operating environment.
 
 The next things are required for this setup to work.
 - A VPN service. I recommend Mullvad, PIA, or Nord for this particular setup, but most should work just fine with some tweaking.
@@ -15,4 +16,10 @@ The next things are required for this setup to work.
 - Plenty of RAM and storage. RAM is useful for caching large streams and downloads while storage is going to be useful for... You know, storing your data!
 #Let's begin!
 ## Creating our directories
-The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. 
+The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`.
+
+## Setting up our docker-compose.yml and .env
+You can either copy and paste from the docker-compose.yml and .env files in this repo or you can download them directly. I recommend downloading the repo as it will also give you all of the configuration files I provide (once I add them) set up and ready to go. This can be done with `git clone https://github.com/roachfire/roachlab.git`. You might have to install git first `sudo apt install git`.
+
+
+
