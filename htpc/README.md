@@ -14,12 +14,12 @@ The next things are required for this setup to work.
 - A VPN service. I recommend Mullvad, PIA, or Nord for this particular setup, but most should work just fine with some tweaking.
 - If you plan on using separate machines (virtual or physical) for your storage server and your docker host make sure that both have dedicated IP addresses so that they can always find each other in the event of a network or machine restart.
 - Plenty of RAM and storage. RAM is useful for caching large streams and downloads while storage is going to be useful for... You know, storing your data!
-#Let's begin!
+# Let's begin!
 ## Creating our directories
 The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`.
 
 ## Setting up our docker-compose.yml and .env
-You can either copy and paste from the docker-compose.yml and .env files in this repo or you can download them directly. I recommend downloading the repo as it will also give you all of the configuration files I provide (once I add them) set up and ready to go. This can be done with `git clone https://github.com/roachfire/roachlab.git`. You might have to install git first `sudo apt install git`.
+You can either copy and paste from the docker-compose.yml and .env files in this repo or you can download them directly. I recommend downloading the repo as it will also give you all of the configuration files I provide (once I add them) set up and ready to go. This can be done with `git clone https://github.com/roachfire/roachlab/htpc.git`. You might have to install git first: `sudo apt install git`. Now, cd into the roachlab directory: `cd /roachlab` 
 
 
 
