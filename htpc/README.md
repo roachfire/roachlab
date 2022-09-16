@@ -3,12 +3,12 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
 
-- A hypervisor like Proxmox to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
+- A hypervisor like [Proxmox](https://proxmox.com/en/) to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
 - An application like [Portainer](https://docs.portainer.io/start/install/server/docker/linux) to help manage the containers you'll be creating. This tool is invaluable for troubleshooting and monitoring your containers.
 - A separate storage server. It is always a good idea to keep your systems separated by roles. You can do this by making either separate VMs for the storage server and the home theater stack, or by using separate physical machines. This way, if one machine goes down you're not losing access to all aspects of your system, especially if your storage server hosts more than just your movies and tv.
 - A service like Tailscale to allow you to remotely manage your services (and facilitate secure remote streaming). You can find installation documentation for your OS [here](https://tailscale.com/download/). 
 - [Plex Pass](https://www.plex.tv/plex-pass/). This is Plex's Premium service that gives you access to useful features like unlimited mobile clients, hardware acceleration (useful for HDR tonemapping and transcoding), etc. The pricing isn't all that bad either. 
-- A decent graphics card or a CPU that supports Intel Quicksync. If you're transcoding large streams with a lot of data per frame, you're going to want one of these things to help speed things up. 
+- A decent graphics card or a [CPU that supports Intel Quicksync](https://www.edius.net/quicksync.html). If you're transcoding large streams with a lot of data per frame, you're going to want one of these things to help speed things up. 
 - A Debian-based machine for your Docker host. I run my services on a Ubuntu Server host, so this tutorial was designed for that operating environment.
 
 The next things are required for this setup to work.
