@@ -66,7 +66,7 @@ Finally, we can connect Plex to Sonnar.
 - Click `Plex Media Server`and configure it as needed for your setup. Click `Authenticate with Plex.tv` and login with your Plex account.
 That's it! Sonarr is ready to go.
 ### Radarr
-To configure Radarr, simply follow all of the steps above as the applications are virtually the same. It can be found at "dockerhostIPaddress:7878" 
+To configure Radarr, simply follow all of the steps above as the applications are virtually the same. It can be found at "dockerhostIPaddress:7878". 
 ### Plex 
 Next we need to configure Plex's library files. Enter "dockerhostIPaddress:32400/web" into your browser. You should see the Plex Media Server page show up. You'll be prompted to login, then to configure your libraries. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. You'll also be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. 
 The next thing I recommend configuring in Plex is going to `Settings`, `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
