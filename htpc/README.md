@@ -8,6 +8,8 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 - [Sonarr](https://hub.docker.com/r/linuxserver/sonarr): Sonarr (formerly NZBdrone) is a PVR for usenet and bittorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
 - [Radarr](https://hub.docker.com/r/linuxserver/radarr): Radarr - A fork of Sonarr to work with movies à la Couchpotato.
 - [Plex-Server](https://hub.docker.com/r/plexinc/pms-docker): With our easy-to-install Plex Media Server software and your Plex apps, available on all your favorite phones, tablets, streaming devices, gaming consoles, and smart TVs, you can stream your video, music, and photo collections any time, anywhere, to any device.
+- [Bazarr](https://hub.docker.com/r/linuxserver/bazarr): Bazarr is a companion application to Sonarr and Radarr. It can manage and download subtitles based on your requirements. You define your preferences by TV show or movie and Bazarr takes care of everything for you.
+- [nzbget](https://hub.docker.com/r/linuxserver/nzbget): Nzbget is a usenet downloader, written in C++ and designed with performance in mind to achieve maximum download speed by using very little system resources.
 
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
