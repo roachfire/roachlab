@@ -1,5 +1,14 @@
 # Rationale
 This project was originally a fork of a project by [sebgl](https://github.com/sebgl/htpc-download-box) but after following his tutorial I encountered some issues with deployment and noticed some documentation that could've been improved upon. Originally, this was meant to be a fork, but I feel the changes I have made and plan on making are significant enough to warrant creating my own repo. The goal of this project is to create a home theater software stack with the least amount of work required by the user while providing the flexibility to accomodate those who do wish to change things. I hope you can see this focus in some of the changes I have made to sebgl's original work. All of this is not to say that sebgl's work is bad, but for someone like me who doesn't have the time nor expertise to figure out some of the steps required on my own, I needed a better solution. I hope that this works well for people in my own shoes. Now, let's get on with the show.
+
+# What are we deploying?
+- [Heimdall](https://hub.docker.com/r/linuxserver/heimdall): Heimdall is a way to organise all those links to your most used web sites and web applications in a simple way. Simplicity is the key to Heimdall. Why not use it as your browser start page? It even has the ability to include a search bar using either Google, Bing or DuckDuckGo.
+- Transmission + OpenVPN: an all-in-one package that deploys a Transmission instance already configured to use OpenVPN for torrent downloads. The container will automatically shut off if connection is lost to the VPN.
+- Jackett: a service to manage torrent indexers used by Sonarr and Jackett to search various torrent sources.
+- Sonarr: a web app that allows you to search for and select TV shows that your stack will automatically download and make available in Plex.
+- Radarr: Sonarr but for movies.
+- Plex-Server: a home media server solution that allows you to organize and stream your downloaded movies, tv shows, and even music.
+
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
 
