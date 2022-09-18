@@ -26,17 +26,17 @@ services:
       - "9091:9091"
       # - "8888:8888" # proxy support
     volumes:
-      - ${SRVR}/downloads:/downloads # downloads folder
-      - ${ROOT}/config/transmission:/config # config files
-      - ${SRVR}/downloads/torrent-blackhole:/watch # folder for tranmission to watch for .magnet files to automatically download
+      - ${SRVR}/downloads:/downloads # Folder where our downloaded files will end up.
+      - ${ROOT}/config/transmission:/config # Folder where Transmission's configuration files will be stored.
+      - ${SRVR}/downloads/torrent-blackhole:/watch # Folder for Tranmission to watch for .magnet files to automatically download.
     environment:
-      - OPENVPN_PROVIDER=MULLVAD
-      - OPENVPN_USERNAME=123456789 #enter your Mullvad account number here
-      - OPENVPN_PASSWORD=m
+      - OPENVPN_PROVIDER=MULLVAD # Enter your VPN provider's name here.
+      - OPENVPN_USERNAME=123456789 # Enter your VPN username here.
+      - OPENVPN_PASSWORD=m # Enter your VPN password here. 
       - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
-      - LOCAL_NETWORK=192.168.20.0/24 #configure your local network to broadcast transmission
+      - LOCAL_NETWORK=192.168.20.0/24 #Configure your local network to broadcast Transmission outside of the VPN connection.
     sysctls:
-        - "net.ipv6.conf.all.disable_ipv6=0"
+        - "net.ipv6.conf.all.disable_ipv6=0" # Use this to disable IPv6 if you don't use it. Comment it out otherwise.
 
   jackett:
     container_name: jackett
