@@ -72,7 +72,7 @@ Next we need to configure Plex's library files. Enter "dockerhostIPaddress:32400
 The next thing I recommend configuring in Plex is going to `Settings`, `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
 ### About Bazarr and nzbget
 I personally don't use these services, so I'll refer you back to the sebgl project linked in the first section for a setup guide.
-### Finishing up
+# Finishing up
 To finish, let's make sure our services are working correctly. 
 - Open your Transmission webUI at "dockerhostIPaddress:9091", then open Sonarr, Radarr, and Plex. 
 - Login to whichever app you want to test first and click `Add New`.
