@@ -3,11 +3,11 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 
 # What are we deploying?
 - [Heimdall](https://hub.docker.com/r/linuxserver/heimdall): Heimdall is a way to organise all those links to your most used web sites and web applications in a simple way. Simplicity is the key to Heimdall. Why not use it as your browser start page? It even has the ability to include a search bar using either Google, Bing or DuckDuckGo.
-- Transmission + OpenVPN: an all-in-one package that deploys a Transmission instance already configured to use OpenVPN for torrent downloads. The container will automatically shut off if connection is lost to the VPN.
-- Jackett: a service to manage torrent indexers used by Sonarr and Jackett to search various torrent sources.
-- Sonarr: a web app that allows you to search for and select TV shows that your stack will automatically download and make available in Plex.
-- Radarr: Sonarr but for movies.
-- Plex-Server: a home media server solution that allows you to organize and stream your downloaded movies, tv shows, and even music.
+- [Transmission + OpenVPN](https://github.com/haugene/docker-transmission-openvpn): This container contains OpenVPN and Transmission with a configuration where Transmission is running only when OpenVPN has an active tunnel. It has built in support for many popular VPN providers to make the setup easier.
+- [Jackett](https://hub.docker.com/r/linuxserver/jackett): Jackett works as a proxy server: it translates queries from apps (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific http queries, parses the html response, then sends results back to the requesting software. This allows for getting recent uploads (like RSS) and performing searches. Jackett is a single repository of maintained indexer scraping & translation logic - removing the burden from other apps.
+- [Sonarr](https://hub.docker.com/r/linuxserver/sonarr): Sonarr (formerly NZBdrone) is a PVR for usenet and bittorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
+- [Radarr](https://hub.docker.com/r/linuxserver/radarr): Radarr - A fork of Sonarr to work with movies à la Couchpotato.
+- [Plex-Server](https://hub.docker.com/r/plexinc/pms-docker): With our easy-to-install Plex Media Server software and your Plex apps, available on all your favorite phones, tablets, streaming devices, gaming consoles, and smart TVs, you can stream your video, music, and photo collections any time, anywhere, to any device.
 
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
