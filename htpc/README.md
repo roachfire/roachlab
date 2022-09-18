@@ -14,6 +14,7 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
 
+- The nzb360 app
 - A hypervisor like [Proxmox](https://proxmox.com/en/) to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
 - An application like [Portainer](https://docs.portainer.io/start/install/server/docker/linux) to help manage the containers you'll be creating. This tool is invaluable for troubleshooting and monitoring your containers.
 - A separate storage server. It is always a good idea to keep your systems separated by roles. You can do this by making either separate VMs for the storage server and the home theater stack, or by using separate physical machines. This way, if one machine goes down you're not losing access to all aspects of your system, especially if your storage server hosts more than just your movies and tv.
@@ -23,6 +24,7 @@ These are some recommendations that might make things a little easier for you, b
 - A Debian-based machine for your Docker host. I run my services on a Ubuntu Server host, so this tutorial was designed for that operating environment.
 
 The next things are required for this setup to work.
+- A free Plex account.
 - Docker and Docker-Compose installed on your host system.
 - A VPN service. I recommend Mullvad, PIA, or Nord for this particular setup, but most should work just fine with some tweaking.
 - If you plan on using separate machines (virtual or physical) for your storage server and your docker host make sure that both have dedicated IP addresses so that they can always find each other in the event of a network or machine restart.
@@ -39,3 +41,40 @@ Now that we're in the directory, we need to set up our .env file. Go ahead and `
 Next, we need to set up our docker-compose.yml. `sudo nano docker-compose.yml` into the file. There's only a few things we'll need to change here. Scroll down to your `transmission`. Find the `environment` section. This is where you'll set up your VPN. Enter your provider's name, your username, and your password. I use Mullvad, so the values there are configured for a Mullvad user. If you have another provider, refer to the excellent documentation [here](https://haugene.github.io/docker-transmission-openvpn/supported-providers/) to configure the container for your provider. Then, go down to the `LOCAL_NETWORK` line. Enter the CIDR of your local network so that the Transmission container's web-UI can be accessed on your local network. That's it! Our services are ready to be deployed. Save and exit the docker-compose.yml and enter the command `docker-compose up -d`. Monitor the terminal to ensure that everything deploys properly. Once that's done, we can see the status of our containers with `docker ps`. Now, onto the application configuration.
 
 ## Configuring our applications
+### Jackett
+The first thing I like to set up is my indexers. Go to the Jackett WebUI by entering "<dockerhostIPaddress>:9117" into your browser. You shouldn't have to configure anything in the Jackett Configuration section at the bottom of the page, but you can if you want to. I don't configure a password because this service is only accessible via Tailscale in my configuration. To add your indexers, go to the searchbar and search for the ones you want. If you don't know where to start, I typically filter for public and en-US indexers. The ones I currently use are 1337x, Anime Tosho, AnimeClipse, The Pirate Bay, and YTS. These have been working fine for me so far.
+### Sonarr
+Now that we have our indexers, lets configure Sonarr. I like to add my indexers to the service first. 
+- Go to `Settings` and click the `+` icon. 
+- Select `Torznab` from the indexer types.
+- Give your indexer a name and go back to the Jackett webUI.
+- Find the indexer you want to add first and click `Copy Torznab Feed`. Paste this into the URL section of the Sonarr Add Indexer window. 
+- Then, return to the Jackett webUI and copy the API Key at the top of the window. 
+- Paste the API Key into the corresponding textbox in the Sonarr Add Indexer window.
+- Repeat these steps for the rest of your indexers.
+The next thing we need to do is to tell Sonarr to use Transmission.
+- Click `Download Clients`.
+- Click the `+` icon and click on `Transmission`.
+- Give Transmission a name and configure the rest of the settings as needed for your setup. I recommend making sure that "Remove Completed" is checked.
+Finally, we can connect Plex to Sonnar.
+- Go to `Connect` and click the `+` button. 
+- Click `Plex Media Server`and configure it as needed for your setup. Click `Authenticate with Plex.tv` and login with your Plex account.
+That's it! Sonarr is ready to go.
+### Radarr
+To configure Radarr, simply follow all of the steps above as the applications are virtually the same. 
+### Plex 
+Next we need to configure Plex's library files. Enter "<dockerhostIPaddress>:32400/web" into your browser. You should see the Plex Media Server page show up. You'll be prompted to login, then to configure your libraries. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. You'll also be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. 
+The next thing I recommend configuring in Plex is going to `Settings`, `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
+### About Bazarr and nzbget
+I personally don't use these services, so I'll refer you back to the sebgl project linked in the first section for a setup guide.
+### Finishing up
+To finish, let's make sure our services are working correctly. 
+- Open your Transmission webUI at "<dockerhostIPaddress>:9091", then open Sonarr, Radarr, and Plex. 
+- Login to whichever app you want to test first and click `Add New`.
+- Search for a show you like and click on it. Make sure that the Root Folder shows `/tv/<showname>.
+- Select the monitor settings you want and your preferred quality profile (for testing purposes, I recommend leaving the quality profile at "Any". 
+- Check `Start search for missing episodes` and click `Add <seriesname>`. 
+- Go back to the Transmission webUI and see if Torrents for your series start to appear.
+- Wait for the Torrents to finish and see if the episodes start to show up in your Plex Media Server. 
+- Repeat the test for Radarr.
+If everything is working properly, your htpc setup should done and ready to go. 
