@@ -46,9 +46,10 @@ Next, we need to set up our docker-compose.yml. `sudo nano docker-compose.yml` t
 
 ## Configuring our applications
 ### Jackett
-The first thing I like to set up is my indexers. Go to the Jackett WebUI by entering "<dockerhostIPaddress>:9117" into your browser. You shouldn't have to configure anything in the Jackett Configuration section at the bottom of the page, but you can if you want to. I don't configure a password because this service is only accessible via Tailscale in my configuration. To add your indexers, go to the searchbar and search for the ones you want. If you don't know where to start, I typically filter for public and en-US indexers. The ones I currently use are 1337x, Anime Tosho, AnimeClipse, The Pirate Bay, and YTS. These have been working fine for me so far.
+The first thing I like to set up is my indexers. Go to the Jackett WebUI by entering "dockerhostIPaddress:9117" into your browser. You shouldn't have to configure anything in the Jackett Configuration section at the bottom of the page, but you can if you want to. I don't configure a password because this service is only accessible via Tailscale in my configuration. To add your indexers, go to the searchbar and search for the ones you want. If you don't know where to start, I typically filter for public and en-US indexers. The ones I currently use are 1337x, Anime Tosho, AnimeClipse, The Pirate Bay, and YTS. These have been working fine for me so far.
 ### Sonarr
-Now that we have our indexers, lets configure Sonarr. I like to add my indexers to the service first. 
+Now that we have our indexers, lets configure Sonarr. I like to add my indexers to the service first.
+- Enter "dockerhostIPaddress:8989" in your browser.
 - Go to `Settings` and click the `+` icon. 
 - Select `Torznab` from the indexer types.
 - Give your indexer a name and go back to the Jackett webUI.
@@ -65,15 +66,15 @@ Finally, we can connect Plex to Sonnar.
 - Click `Plex Media Server`and configure it as needed for your setup. Click `Authenticate with Plex.tv` and login with your Plex account.
 That's it! Sonarr is ready to go.
 ### Radarr
-To configure Radarr, simply follow all of the steps above as the applications are virtually the same. 
+To configure Radarr, simply follow all of the steps above as the applications are virtually the same. It can be found at "dockerhostIPaddress:7878" 
 ### Plex 
-Next we need to configure Plex's library files. Enter "<dockerhostIPaddress>:32400/web" into your browser. You should see the Plex Media Server page show up. You'll be prompted to login, then to configure your libraries. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. You'll also be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. 
+Next we need to configure Plex's library files. Enter "dockerhostIPaddress:32400/web" into your browser. You should see the Plex Media Server page show up. You'll be prompted to login, then to configure your libraries. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. You'll also be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. 
 The next thing I recommend configuring in Plex is going to `Settings`, `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
 ### About Bazarr and nzbget
 I personally don't use these services, so I'll refer you back to the sebgl project linked in the first section for a setup guide.
 ### Finishing up
 To finish, let's make sure our services are working correctly. 
-- Open your Transmission webUI at "<dockerhostIPaddress>:9091", then open Sonarr, Radarr, and Plex. 
+- Open your Transmission webUI at "dockerhostIPaddress:9091", then open Sonarr, Radarr, and Plex. 
 - Login to whichever app you want to test first and click `Add New`.
 - Search for a show you like and click on it. Make sure that the Root Folder shows `/tv/<showname>.
 - Select the monitor settings you want and your preferred quality profile (for testing purposes, I recommend leaving the quality profile at "Any". 
