@@ -42,7 +42,8 @@ services:
     container_name: jackett
     image: linuxserver/jackett:latest
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - 9117:9117
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
@@ -56,7 +57,8 @@ services:
     container_name: nzbget
     image: linuxserver/nzbget:latest
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - 6789:6789
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
@@ -69,7 +71,8 @@ services:
     container_name: sonarr
     image: linuxserver/sonarr:latest
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - 7878:7878
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
@@ -84,7 +87,8 @@ services:
     container_name: radarr
     image: linuxserver/radarr:latest
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - 8989:8989
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
@@ -95,13 +99,29 @@ services:
       - ${SRVR}/complete/movies:/movies # movies folder
       - ${SRVR}/downloads:/downloads # download folder
 
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT}/config:/config
+      - ${SRVR}:/downloads #optional
+      - ${SRVR}/complete/music:/music # music folder
+    restart: unless-stopped
+    ports:
+      - 8686:8686
+
   plex-server:
     container_name: plex-server
     image: plexinc/pms-docker:latest
     restart: unless-stopped
     environment:
       - TZ=${TZ} # timezone, defined in .env
-    network_mode: host
+    ports:
+      - 32400:32400
     volumes:
       - ${ROOT}/config/plex/db:/config # plex database
       - ${SRVR}/config/plex/transcode:/transcode # temp transcoded files
@@ -111,7 +131,8 @@ services:
     container_name: bazarr
     image: linuxserver/bazarr
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - 6767:6767
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
