@@ -9,7 +9,7 @@ services:
       - PGID={PGID}
       - TZ={TZ}
     volumes:
-      - {ROOT}/config/heimdall:/config # Folder where Heimdall will store its configuration files.
+      - ${ROOT}/config/heimdall:/config # Folder where Heimdall will store its configuration files.
     ports:
       - 1080:80
       - 8443:443
