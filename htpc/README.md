@@ -1,4 +1,4 @@
-# Things I plan on Adding:
+# Things I plan on adding:
 - A Tailscale docker container to facilate secure remote access to your services without opening any ports.
 - A firewall configuration guide to lockdown access to your applications.
 - A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.
