@@ -32,7 +32,7 @@ These are some recommendations that might make things a little easier for you, b
 
 The next things are required for this setup to work.
 - A free Plex account.
-- Docker and Docker-Compose installed on your host system.
+- [Docker](https://docs.docker.com/engine/install/ubuntu/) and [Docker-Compose](https://docs.docker.com/compose/install/linux/) installed on your host system.
 - A VPN service. I recommend Mullvad, PIA, or Nord for this particular setup, but most should work just fine with some tweaking.
 - If you plan on using separate machines (virtual or physical) for your storage server and your docker host make sure that both have dedicated IP addresses so that they can always find each other in the event of a network or machine restart.
 - Plenty of RAM and storage. RAM is useful for caching large streams and downloads while storage is going to be useful for... You know, storing your data!
