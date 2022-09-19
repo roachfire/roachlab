@@ -27,7 +27,6 @@ services:
       # - "8888:8888" # proxy support
     volumes:
       - ${SRVR}/downloads:/downloads # Folder where our downloaded files will end up.
-      - ${SRVR}/downloads/incomplete:/incomplete # Folder where incomplete downloads will be cached.
       - ${ROOT}/config/transmission:/config # Folder where Transmission's configuration files will be stored.
       - ${SRVR}/downloads/torrent-blackhole:/watch # Folder for Tranmission to watch for .magnet files to automatically download.
     environment:
