@@ -99,21 +99,6 @@ services:
       - ${SRVR}/complete/movies:/movies # movies folder
       - ${SRVR}/downloads:/downloads # download folder
 
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${ROOT}/config:/config
-      - ${SRVR}:/downloads #optional
-      - ${SRVR}/complete/music:/music # music folder
-    restart: unless-stopped
-    ports:
-      - 8686:8686
-
   plex-server:
     container_name: plex-server
     image: plexinc/pms-docker:latest
