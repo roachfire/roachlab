@@ -27,6 +27,7 @@ services:
       # - "8888:8888" # proxy support
     volumes:
       - ${SRVR}/downloads:/downloads # Folder where our downloaded files will end up.
+      - ${SRVR}/downloads/incomplete:/incomplete # Folder where incomplete downloads will be cached.
       - ${ROOT}/config/transmission:/config # Folder where Transmission's configuration files will be stored.
       - ${SRVR}/downloads/torrent-blackhole:/watch # Folder for Tranmission to watch for .magnet files to automatically download.
     environment:
@@ -38,20 +39,19 @@ services:
     sysctls:
         - "net.ipv6.conf.all.disable_ipv6=0" # Use this to disable IPv6 if you don't use it. Comment it out otherwise.
 
-  jackett:
-    container_name: jackett
-    image: linuxserver/jackett:latest
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:develop
     restart: unless-stopped
     ports:
-      - 9117:9117
+      - 9696:9696
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ${SRVR}/downloads/torrent-blackhole:/downloads # place where to put .torrent files for manual download
-      - ${ROOT}/config/jackett:/config # config files
+      - ${ROOT}/config/prowlarr:/config # config files
 
   nzbget:
     container_name: nzbget
