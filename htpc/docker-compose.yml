@@ -82,6 +82,21 @@ services:
       - ${ROOT}/config/sonarr:/config # config files
       - ${SRVR}/complete/tv:/tv # tv shows folder
       - ${SRVR}/downloads:/downloads # download folder
+      
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT}/config:/config
+      - ${SRVR}:/downloads #optional
+      - ${SRVR}/complete/music:/music # music folder
+    restart: unless-stopped
+    ports:
+      - 8686:8686
 
   radarr:
     container_name: radarr
