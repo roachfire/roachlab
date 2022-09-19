@@ -5,17 +5,19 @@
 - A music service in the same vein as Sonarr and Radarr.
 - Adapting the project to be aimed primarily at NAS users.
 - Heimdall configuration guide once I figure some more things out.
+
 # Rationale
 This project was originally a fork of a project by [sebgl](https://github.com/sebgl/htpc-download-box) but after following his tutorial I encountered some issues with deployment and noticed some documentation that could've been improved upon. Thus I feel the changes I have made and plan on making are significant enough to warrant creating my own repo. The goal of this project is to create a home theater software stack with the least amount of work required by the user while providing the flexibility to accomodate those who do wish to change things. I hope you can see this focus in some of the changes I have made to sebgl's original work. All of this is not to say that sebgl's work is bad, but for someone like me who doesn't have the time nor expertise to figure out some of the steps required on my own, I needed a better solution. I hope that this works well for people in my own shoes. Now, let's get on with the show.
 
 # What are we deploying?
 - [Heimdall](https://hub.docker.com/r/linuxserver/heimdall): Heimdall is a way to organise all those links to your most used web sites and web applications in a simple way. Simplicity is the key to Heimdall. Why not use it as your browser start page? It even has the ability to include a search bar using either Google, Bing or DuckDuckGo.
 - [Transmission + OpenVPN](https://github.com/haugene/docker-transmission-openvpn): This container contains OpenVPN and Transmission with a configuration where Transmission is running only when OpenVPN has an active tunnel. It has built in support for many popular VPN providers to make the setup easier.
-- [Jackett](https://hub.docker.com/r/linuxserver/jackett): Jackett works as a proxy server: it translates queries from apps (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific http queries, parses the html response, then sends results back to the requesting software. This allows for getting recent uploads (like RSS) and performing searches. Jackett is a single repository of maintained indexer scraping & translation logic - removing the burden from other apps.
+- [Prowlarr](https://hub.docker.com/r/linuxserver/prowlarr): Prowlarr is a indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Sonarr, Radarr, Lidarr, and Readarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
 - [Sonarr](https://hub.docker.com/r/linuxserver/sonarr): Sonarr (formerly NZBdrone) is a PVR for usenet and bittorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
+- [Lidarr](https://hub.docker.com/r/linuxserver/lidarr): Lidarr is a music collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new tracks from your favorite artists and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
 - [Radarr](https://hub.docker.com/r/linuxserver/radarr): Radarr - A fork of Sonarr to work with movies à la Couchpotato.
-- [Plex-Server](https://hub.docker.com/r/plexinc/pms-docker): With our easy-to-install Plex Media Server software and your Plex apps, available on all your favorite phones, tablets, streaming devices, gaming consoles, and smart TVs, you can stream your video, music, and photo collections any time, anywhere, to any device.
 - [Bazarr](https://hub.docker.com/r/linuxserver/bazarr): Bazarr is a companion application to Sonarr and Radarr. It can manage and download subtitles based on your requirements. You define your preferences by TV show or movie and Bazarr takes care of everything for you.
+- [Plex-Server](https://hub.docker.com/r/plexinc/pms-docker): With our easy-to-install Plex Media Server software and your Plex apps, available on all your favorite phones, tablets, streaming devices, gaming consoles, and smart TVs, you can stream your video, music, and photo collections any time, anywhere, to any device.
 - [nzbget](https://hub.docker.com/r/linuxserver/nzbget): Nzbget is a usenet downloader, written in C++ and designed with performance in mind to achieve maximum download speed by using very little system resources.
 
 # Before we get started...
@@ -37,6 +39,7 @@ The next things are required for this setup to work.
 - If you plan on using separate machines (virtual or physical) for your storage server and your docker host make sure that both have dedicated IP addresses so that they can always find each other in the event of a network or machine restart.
 - Plenty of RAM and storage. RAM is useful for caching large streams and downloads while storage is going to be useful for... You know, storing your data!
 # Let's begin!
+
 ## Creating our directories
 The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`. Use this same commmand to create a working directory for our project (something like /htpcproject/).
 
@@ -46,24 +49,25 @@ You can either copy and paste from the docker-compose.yml and .env files in this
 Next, we need to set up our docker-compose.yml. `sudo nano docker-compose.yml` to create the file. Paste the text from my file into here. There's only a few things we'll need to change here. Scroll down to your `transmission`. Find the `environment` section. This is where you'll set up your VPN. Enter your provider's name, your username, and your password. I use Mullvad, so the values there are configured for a Mullvad user. If you have another provider, refer to the excellent documentation [here](https://haugene.github.io/docker-transmission-openvpn/supported-providers/) to configure the container for your provider. Then, go down to the `LOCAL_NETWORK` line. Enter the CIDR of your local network so that the Transmission container's web-UI can be accessed on your local network. That's it! Our services are ready to be deployed. Save and exit the docker-compose.yml and enter the command `docker-compose up -d`. Monitor the terminal to ensure that everything deploys properly. Once that's done, we can see the status of our containers with `docker ps`. Now, onto the application configuration.
 
 ## Configuring our applications
-### Jackett
-The first thing I like to set up is my indexers. Go to the Jackett WebUI by entering "dockerhostIPaddress:9117" into your browser. You shouldn't have to configure anything in the Jackett Configuration section at the bottom of the page, but you can if you want to. I don't configure a password because this service is only accessible via Tailscale in my configuration. To add your indexers, go to the searchbar and search for the ones you want. If you don't know where to start, I typically filter for public and en-US indexers. The ones I currently use are 1337x, Anime Tosho, AnimeClipse, The Pirate Bay, and YTS. These have been working fine for me so far.
+
+### Prowlarr
+The first thing I like to set up is my indexers. Go to the Prowlarr WebUI by entering "dockerhostIPaddress:9696" into your browser. Next we want to do is go to `Settings` -> `General` and create a username and password. Restart as prompted. Next, we want to the `Indexers` section at the top of the left pane. Click `Add Indexer` and add the indexers you want to use. I typically sort by `en-US` for language and `Public` for privacy. Currently, I use 1337x, AnimeClipse, AniRena, kickasstorrents.to, and The Pirate Bay. Now we need to configure the rest of our applications.
+
 ### Plex 
 **A note on Plex and VLANS: make sure that you access your Plex server from a device on the same VLAN for initial setup, as Plex does not allow connections from other VLAN by default. For example: if your Plex is on 192.168.20.0/24, it will not accept connections from 192.168.30.0/24**.
 
-Enter "dockerhostIPaddress:32400/web" into your browser. You should see the Plex Media Server setup page show up. You'll be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. Next we need to configure Plex's library files. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. The next thing I recommend configuring in Plex is going to `Settings`, `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
-### Sonarr
-**Note for Sonarr and Radarr permissions: Sonarr and Radarr will require permission to read and write to the /$SRVR/complete/tv and the /$SRVR/complete/movies directories. To make this simple, I recommend running `chmod 777 /$SRVR/complete/directoryname/` on these directories to make sure permission is granted**
+Enter "dockerhostIPaddress:32400/web" into your browser. You should see the Plex Media Server setup page show up. You'll be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. Next we need to configure Plex's library files. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. The next thing I recommend configuring in Plex is going to `Settings` -> `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
 
-Now that we have our indexers and Plex set up, lets configure Sonarr. I like to add my indexers to the service first.
-- Enter "dockerhostIPaddress:8989" in your browser.
-- Go to `Settings` and click the `+` icon. 
-- Select `Torznab` from the indexer types.
-- Give your indexer a name and go back to the Jackett webUI.
-- Find the indexer you want to add first and click `Copy Torznab Feed`. Paste this into the URL section of the Sonarr Add Indexer window. 
-- Then, return to the Jackett webUI and copy the API Key at the top of the window. 
-- Paste the API Key into the corresponding textbox in the Sonarr Add Indexer window.
-- Repeat these steps for the rest of your indexers.
+### Sonarr
+**Note for Sonarr, Radarr, and Lidarr permissions: these apps will require permission to read and write to the /$SRVR/complete/tv, /$SRVR/complete/movies, and the /$SRVR/complete/music directories. To make this simple, I recommend running `chmod 777 /$SRVR/complete/directoryname/` on these directories to make sure permission is granted**
+
+Now that we have our indexers and Plex set up, lets configure Sonarr.
+- Go to `Settings` -> `General` and create a username and password. Restart the application when prompted.
+- Once you refresh the page and login, navigate back to `General` if needed and copy the API Key.
+- Return to the Prowlarr webUI and go to `Settings` -> `Apps`. 
+- Click on `+` and then `Sonarr`.
+- Set sync level to "Full Sync", add your Prowlarr server's address, your Sonarr server's address, and paste your API Key.
+- Click save and your setup should be done.
 The next thing we need to do is to tell Sonarr to use Transmission.
 - Click `Download Clients`.
 - Click the `+` icon and click on `Transmission`.
@@ -72,8 +76,10 @@ Finally, we can connect Plex to Sonnar.
 - Go to `Connect` and click the `+` button. 
 - Click `Plex Media Server`and configure it as needed for your setup. Click `Authenticate with Plex.tv` and login with your Plex account.
 That's it! Sonarr is ready to go.
-### Radarr
-To configure Radarr, simply follow all of the steps above as the applications are virtually the same. It can be found at "dockerhostIPaddress:7878". 
+
+### Radarr and Lidarr
+To configure Radarr and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878" and "dockerhostIPaddress:8686", respectively. Remember that Radarr should store movie folders in the /movies/ directory and Lidarr should store music folders in the /music/ directory.
+
 ### About Bazarr and nzbget
 I personally don't use these services, so I'll refer you back to the sebgl project linked in the first section for a setup guide.
 # Finishing up
