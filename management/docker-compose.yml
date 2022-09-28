@@ -112,7 +112,7 @@ services:
     environment:
       - PUID={PUID} # .env file.
       - PGID={PGID} # .env file.
-      - MYSQL_ROOT_PASSWORD={BSMYSQL_RPWD} # .env file.
+      - MYSQL_ROOT_PASSWORD={BSMYSQL_ROOTPWD} # .env file.
       - TZ={TZ} # .env file.
       - MYSQL_DATABASE=bookstackapp
       - MYSQL_USER={BSMYSQL_USER} # .env file.
