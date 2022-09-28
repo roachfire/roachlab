@@ -19,7 +19,6 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 - A Tailscale docker container to facilate secure remote access to your services without opening any ports.
 - A firewall configuration guide to lockdown access to your applications.
 - A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.
-- A music service in the same vein as Sonarr and Radarr.
 - Adapting the project to be aimed primarily at NAS users.
 - Heimdall configuration guide once I figure some more things out.
 
