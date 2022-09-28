@@ -18,15 +18,15 @@ services:
     environment:
       - INFLUXDB_DB=db0
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME} # Change this in the .env file.
-      - INFLUXDB_ADMIN_PASSWORD={INFLUXDB_PWD} # Change this in the .env file.
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PWD} # Change this in the .env file.
  
  heimdall:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
     environment:
-      - PUID={PUID} # .env file.
-      - PGID={PUID} # .env file.
-      - TZ={TZ} # .env file.
+      - PUID=${PUID} # .env file.
+      - PGID=${PUID} # .env file.
+      - TZ=${TZ} # .env file.
     volumes:
       - /heimdall:/config
     ports:
@@ -92,12 +92,12 @@ services:
     image: lscr.io/linuxserver/bookstack
     container_name: bookstack
     environment:
-      - PUID={PGID} # .env file.
-      - PGID={PGID} # .env file.
-      - APP_URL={BOOKSTACK_URL} # .env file.
+      - PUID=${PGID} # .env file.
+      - PGID=${PGID} # .env file.
+      - APP_URL=${BOOKSTACK_URL} # .env file.
       - DB_HOST=bookstack_db
-      - DB_USER={BOOKSTACKDB_USER} # .env file.
-      - DB_PASS={BOOKSTACKDB_PWD} # .env file.
+      - DB_USER=${BOOKSTACKDB_USER} # .env file.
+      - DB_PASS=${BOOKSTACKDB_PWD} # .env file.
       - DB_DATABASE=bookstackapp
     volumes:
       - /path/to/data:/config
@@ -110,13 +110,13 @@ services:
     image: lscr.io/linuxserver/mariadb
     container_name: bookstack_db
     environment:
-      - PUID={PUID} # .env file.
-      - PGID={PGID} # .env file.
-      - MYSQL_ROOT_PASSWORD={BSMYSQL_ROOTPWD} # .env file.
-      - TZ={TZ} # .env file.
+      - PUID=${PUID} # .env file.
+      - PGID=${PGID} # .env file.
+      - MYSQL_ROOT_PASSWORD=${BSMYSQL_ROOTPWD} # .env file.
+      - TZ=${TZ} # .env file.
       - MYSQL_DATABASE=bookstackapp
-      - MYSQL_USER={BSMYSQL_USER} # .env file.
-      - MYSQL_PASSWORD={BSMYSQL_PWD} # .env file.
+      - MYSQL_USER=${BSMYSQL_USER} # .env file.
+      - MYSQL_PASSWORD=${BSMYSQL_PWD} # .env file.
     volumes:
       - /path/to/data:/config
     restart: unless-stopped
