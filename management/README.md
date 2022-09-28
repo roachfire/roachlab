@@ -16,7 +16,7 @@ I recommend you have the following in place before deploying this setup to make 
 - A service like [Tailscale](https://tailscale.com/) to allow you to remotely manage your services (and facilitate secure remote streaming). You can find installation documentation for your OS [here](https://tailscale.com/download/). 
 - A Debian-based machine for your Docker host. I run my services on a Ubuntu Server host, so this tutorial was designed for that operating environment.
 - A network firewall to ensure that only authorized devices are connecting to your services remotely.
-- A certificate authority to allow you to create and distribute your own SLL certs for secure connections to your services. 
+- A certificate authority to allow you to create and distribute your own SSL certs for secure connections to your services. 
 
 The next things are required for this setup to work.
 - [Proxmox](https://proxmox.com/en/) to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting. Proxmox is what I use, so the tutorial will be tailored to a Proxmox VM host.
