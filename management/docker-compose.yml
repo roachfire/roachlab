@@ -100,7 +100,7 @@ services:
       - DB_PASS=${BOOKSTACKDB_PWD} # .env file.
       - DB_DATABASE=bookstackapp
     volumes:
-      - /path/to/data:/config
+      - ${ROOT}/config/bookstack/:/config
     ports:
       - 6875:80
     restart: unless-stopped
@@ -118,7 +118,7 @@ services:
       - MYSQL_USER=${BSMYSQL_USER} # .env file.
       - MYSQL_PASSWORD=${BSMYSQL_PWD} # .env file.
     volumes:
-      - /path/to/data:/config
+      - ${ROOT}/config/bookstackdb/:/config
     restart: unless-stopped
 
   
