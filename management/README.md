@@ -23,8 +23,16 @@ The next things are required for this setup to work.
 - At least one virtual machine. This goes without saying I hope.
 
 ## Creating our directories
+Directory setup for this stack is simple. We'll use '/management/' as our root directory. Create this directory with the command 'sudo mkdir /management/'. That's it! We're ready for the next parts of configuration.
+
+## Installing and Configuring Portainer
+Before we deploy our containers, we want to be able to manage them effectively. This will be done through Portainer. Portainer can stop, start, pause, create, and deploy our containers. To install it, insert the following command into the terminal: 'docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest'. This command will install Portainer and 
+set it to broadcast the Web-UI over ports 8000 and 9443. To setup Portainer, enter "https://<dockerhostIPaddress>:9443" in your browser. You should see a page to create the initial admin user for Portainer. Create your username and password and login. 
+
+In the Environment Wizard that appears after logging in, select 'Get Started' and connect to the local Docker envrionment. Next, I recommend you go to *Settings -> SSL Certificate* and enable "Force HTTPS only". This will help increase security down the line. We're done with Portainer config but we're not done using Portainer.
 
 ## Setting up our .env and docker-compose.yml
+Copy
 
 ## Configuring our applications
 
