@@ -149,5 +149,11 @@ services:
       - ${ROOT}/config/plex/db:/config # plex database
       - ${SRVR}/config/plex/transcode:/transcode # temp transcoded files
       - ${SRVR}/complete:/data # media library
-
   
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ${APPLICATIONS}
