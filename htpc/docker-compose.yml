@@ -112,6 +112,30 @@ services:
       - ${ROOT}/config/radarr:/config # config files
       - ${SRVR}/complete/movies:/movies # movies folder
       - ${SRVR}/downloads:/downloads # download folder
+  
+  bazarr:
+    container_name: bazarr
+    image: linuxserver/bazarr
+    restart: unless-stopped
+    ports:
+      - 6767:6767
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+  
+  ombi:
+    image: lscr.io/linuxserver/ombi:latest
+    container_name: ombi
+    environment:
+      - PUID={PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - BASE_URL=/ombi #optional
+    volumes:
+      - ${ROOT}/config/ombi/:/config
+    ports:
+      - 3579:3579
+    restart: unless-stopped
 
   plex-server:
     container_name: plex-server
@@ -126,12 +150,4 @@ services:
       - ${SRVR}/config/plex/transcode:/transcode # temp transcoded files
       - ${SRVR}/complete:/data # media library
 
-  bazarr:
-    container_name: bazarr
-    image: linuxserver/bazarr
-    restart: unless-stopped
-    ports:
-      - 6767:6767
-    environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
+  
