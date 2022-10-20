@@ -9,6 +9,44 @@ volumes:
     driver: local
 
 services:
+
+  snipe-db:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: snipe-db
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - MYSQL_ROOT_PASSWORD=${SNIPEDB_ROOTPWD}
+      - TZ=${TZ}
+      - MYSQL_DATABASE=${SNIPEDB_NAME}
+      - MYSQL_USER=${SNIPEDB_USER}
+      - MYSQL_PASSWORD=${SNIPEDB_PWD}
+      - REMOTE_SQL=${SNIPEDB_REMOTE}
+    volumes:
+      - ${ROOT}/config/snipe-db:/config
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+    
+  snipe-it:
+    image: lscr.io/linuxserver/snipe-it:latest
+    container_name: snipe-it
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - APP_URL=${SNIPEURL}
+      - MYSQL_PORT_3306_TCP_ADDR=${SNIPEDB_HOST}
+      - MYSQL_PORT_3306_TCP_PORT=${SNIPEDB_PORT}
+      - MYSQL_DATABASE=${SNIPEDB_NAME}
+      - MYSQL_USER=${SNIPEDB_USER}
+      - MYSQL_PASSWORD=${SNIPEDB_PWD}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT}/config/snipe-it:/config
+    ports:
+      - 8080:80
+    restart: unless-stopped 
+
   influxdb:
     image: influxdb:latest
     container_name: influxdb
