@@ -1,20 +1,6 @@
 version: "3.4"
 services:
 
-  heimdall:
-    image: lscr.io/linuxserver/heimdall:latest
-    container_name: heimdall
-    environment:
-      - PUID=${PUID} 
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${ROOT}/config/heimdall:/config # Folder where Heimdall will store its configuration files.
-    ports:
-      - 1080:80
-      - 8443:443
-    restart: unless-stopped
-
   transmission:
     image: haugene/transmission-openvpn
     cap_add:
