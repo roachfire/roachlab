@@ -93,10 +93,10 @@ I personally don't use these services, so I'll refer you back to the sebgl proje
 To finish, let's make sure our services are working correctly. 
 - Open your Transmission webUI at "dockerhostIPaddress:9091", then open Sonarr, Radarr, and Plex. 
 - Login to whichever app you want to test first and click `Add New`.
-- Search for a show you like and click on it. Make sure that the Root Folder shows `/tv/<showname>.
+- Search for a show you like and click on it. Make sure that the media is being stored in the proper root folder for the service.
 - Select the monitor settings you want and your preferred quality profile (for testing purposes, I recommend leaving the quality profile at "Any". 
-- Check `Start search for missing episodes` and click `Add <seriesname>`. 
-- Go back to the Transmission webUI and see if Torrents for your series start to appear.
-- Wait for the Torrents to finish and see if the episodes start to show up in your Plex Media Server. 
-- Repeat the test for Radarr.
+- Check `Start search for missing <mediatype>` and click `Add <medianame>`. 
+- Go back to the Transmission webUI and see if Torrents for your meida start to appear.
+- Wait for the Torrents to finish and see if the media starts to show up in your Plex Media Server. 
+- Repeat the test for the rest of your applications.
 If everything is working properly, your htpc setup should done and ready to go. 
