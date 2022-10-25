@@ -19,8 +19,16 @@ These are just some suggestions that might make things a little easier for you.
 The next things are required for this setup to work.
 - Docker and docker-compose installed.
 - A domain that uses Cloudflare for DNS. I purchased mine from [Porkbun](https://porkbun.com/). Documentation for how to connect domains to Cloudflare's DNS can be found [here](https://developers.cloudflare.com/fundamentals/get-started/setup/add-site/). The domain will cost you, but all of the stuff on the Cloudflare side of things will be free.
+# Let's begin!
 ## Creating our directories
 The first thing we'll need to do is create directories for some of our containers to store their data. `sudo mkdir /networking/` will take care of this for us. Since this stack is simple, this is the only directory we need to create.
 ## Setting up our .env and docker-compose.yml
 `CD` into the directory you just created and use `sudo nano docker-compose.yml` to create our compose file. As mentioned before, the simplicity of this setup means we don't have to setup much here. Save the file and you should be good to go.. Now, we need to create our .env file. `sudo nano .env` will take care of this. Change the values that need be changed (indicated by the "Changeme") and save the file. Now we can deploy everything with a simple `docker-compose up -d`. 
 ## Configuring our applications
+If everything installed properly, we should see our three containers running when we run the command `docker ps`.
+### Nginx Proxy Manager
+This container can be accessed at http://<dockerhostipaddress>:81. Upon entering the WebUI, you'll be presented with a page to create and admin account. Walk through the setup process and you'll be presented with the Nginx Proxy Manager dashboard. The first thing we're going to do is create our SSL cert. To make things simple, we're going to use a wildcard cert that will apply to all of our subdomains.
+1. Go to the **SSL Certificates** page. 
+2. Click **Add SSL Certificate**. Select **Let's Encrypt**.
+3. In the configuration dialogue, enter "*.your.domain", enter your email address, and toggle both of the switches at the bottom of the dialogue.
+4. Select **Cloudflare** as your DNS provider and head to this page to get your API key. Copy it and paste it after the "=" in the **Credentials File Content** box.
