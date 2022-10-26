@@ -12,6 +12,7 @@ Getting my networking stack was a pain for me when I was first getting started, 
 - A tutorial on setting up failover for NGINX, Pi-hole, and the Cloudflare tunnel.
 # Before we get started...
 These are just some suggestions that might make things a little easier for you.
+- A static IP address set for the host(s) running PiHole and Nginx Proxy Manager.
 - A hypervisor like [Proxmox](https://www.proxmox.com/en/) to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
 - A password manager to securely manage passwords for your services. I recommend [Bitwarden](https://bitwarden.com/)
 - A TOTP application to facilitate generating access codes to your services that are compatible with it.
@@ -39,7 +40,7 @@ This container can be accessed at http://<dockerhostipaddress>:81. Upon entering
 4. Select **Cloudflare** as your DNS provider and head to [this page](https://dash.cloudflare.com/profile/api-tokens) to get your API key. If you haven't generated one yet, click **Create Token**. Select **Edit Zone DNS** as your template. Select your domain for **Include -> Specific Zone -> Select...** and click **Continue to summary**. Then click **Create token**. The next screen will give you your API Token. Copy it and paste it after the "=" in the **Credentials File Content** box back in Nginx Proxy Manager. Then click **Save**.
 #### Adding our services to NGINX Proxy Manager
 1. Now we'll need to add proxy hosts to NPM. Select **Dashboard** in NGINX Proxy Manager and click **Add Proxy Host**.
-2. We'll start with one for NGINX Proxy Manager. Enter "nginx.your.domain" in the **Domain Names** box. For scheme, select `http`. Enter the IP address or hostname of your server in the next box, followed by "81" in the **Forward Port** box. Toggle the **Cache Assets** and **Block Common Exploits** settings.
+2. We'll start with one for NGINX Proxy Manager. Enter "nginx.your.domain" in the **Domain Names** box. For scheme, select `http`. Enter the IP address or hostname (I recommend the hostname so you don't have to worry about changing IP addresses) of your server in the next box, followed by "81" in the **Forward Port** box. Toggle the **Cache Assets** and **Block Common Exploits** settings.
 3.  Now, we can add our SSL cert. Click on the **SSL** tab and select your new wildcard certificate from the **SSL Certificate** dropdown. Turn on all of the toggles and then click **Save**. Repeat this process for all services you self-host, even those that you don't wish to expose to the web. Note that some services will use `https` instead of `http` as their scheme.
 ### Pi-hole
 This container can be accessed at http://<dockerhostipaddress>:82/admin. Upon entering the address, you'll be presented with the login screen.
