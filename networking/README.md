@@ -43,5 +43,6 @@ This container can be accessed at http://<dockerhostipaddress>:82/admin. Upon en
 2. Expand **Local DNS** in the sidebar and select **DNS records**. You'll be taken to a page where you can add local DNS redirect records. Add all of the services you self-host, including those that you don't want exposed to the web, entering "<servicename>.your.domain" in the **Domain:** box and the IP address of the server hosting your NGINX Proxy Manager instance in the **IP Address:** box.
 3. Once you're done there, you'll need to access your router's admin settings and set the IP address of the server running Pi-hole as your DNS server. Or you can set the Pi-hole host as your DNS server on a device-by-device basis. I recommend deploying a second instance of Pi-hole to serve as a backup in case your main instance fails.
 ### Cloudflare Tunnel
+Getting the tunnel started is fairly simple. Go to the [Cloudflare Tunnels page](https://dash.teams.cloudflare.com/8778665b41146f639e2e599f76bee656/access/tunnels), then
 
 
