@@ -42,7 +42,22 @@ This container can be accessed at http://<dockerhostipaddress>:82/admin. Upon en
 1. Enter the password you added to the `.env` file to access the UI. Pi-hole is preconfigured with a blocklist and pretty much every setting you'll need, but feel free to add other blocklists and mess around with the settings when we're finished here.
 2. Expand **Local DNS** in the sidebar and select **DNS records**. You'll be taken to a page where you can add local DNS redirect records. Add all of the services you self-host, including those that you don't want exposed to the web, entering "<servicename>.your.domain" in the **Domain:** box and the IP address of the server hosting your NGINX Proxy Manager instance in the **IP Address:** box.
 3. Once you're done there, you'll need to access your router's admin settings and set the IP address of the server running Pi-hole as your DNS server. Or you can set the Pi-hole host as your DNS server on a device-by-device basis. I recommend deploying a second instance of Pi-hole to serve as a backup in case your main instance fails.
-### Cloudflare Tunnel
-Getting the tunnel started is fairly simple. Go to the [Cloudflare Tunnels page](https://dash.teams.cloudflare.com/8778665b41146f639e2e599f76bee656/access/tunnels), then
-
-
+### Cloudflare tunnel
+Getting the tunnel started is fairly simple.
+#### Creating the tunnel
+1. Go to the [Cloudflare Tunnels page](https://dash.cloudflare.com/?to=/:account/:zone/traffic/argo-tunnel), then click **Create a tunnel**. Name it something descriptive, then click **Save tunnel**.
+2. On the next page, select **Docker** as the operating system. Then, copy the command that appears in the **Install and run a connector** section.
+3. On your docker host, paste and run the command in the command line. This will install and deploy our container, automatically connecting it to our Cloudflare account. Then, click *Next**.
+4. In the **Public Hostnames** section, enter "*.your.domain" to create wildcard domain entry. Then, enter the hostname or IP address of your NGINX Proxy Manager hsot, appending ":443" to the end of the address. Select `HTTPS` as the Service Type. Then click **Save hostname**. This will make Cloudflare forward traffic from NGINX Proxy Manager to our DNS.
+#### Adding DNS records for our subdomains to Cloudflare
+1. Leaving the Cloudflare Tunnels tab open, go to your [Cloudflare Dashboard](https://dash.cloudflare.com/login) and select **DNS** from the sidebar.
+2. Click **+ Add record**. Select `CNAME` for the **Type** and enter the name of the first subdomain you'd like to be accessible online.
+3. Return to the Cloudflare Tunnels tab and copy the code under the tunnel name. Return to the DNS tab and paste that code into the **Target** textbox. Then click **Save**. If everything was configured correctly, you should be able to access your service at "service.your.domain".
+#### Securing your hosted services
+If you're like me and decided to place all of your selfhosted services in your Cloudflare tunnel (even those that are used for management), you may want to place some extra security in front of them. Thankfully, Cloudflare has an excellent security solution available for free.
+1. Open the Cloudflare Tunnels tab and click **Applications** in the sidebar.
+2. Click **Add an application**, then select **Self-hosted**. Enter a name, configure a session duration, then fill out the rest of the fields with the application's information. Click **Next** once done.
+3. On the next page, you'll configure your access policies. Give the policy a name.
+4. To make things simple, I configure one rule for each service I want secured. For the **Selector**, I choose emails, then enter my primary email address for **Value**. This makes it to where every time you access that site from a new browser session from a device not on your local network, you'll be prompted to enter your email address to recieve an access code. Only the email addresses you designate will be able to recieve a code.
+# Closing thoughts
+What we've configured here is local and external access for your domains. If you try to access your service from your local network, Pi-hole will provide a direct connection to the service. However, if you try to access it from an external network, Cloudflare will intercept the traffic and force you to authenticate. Cloudflare offers a wealth of other options to improve the security of your services (but what we've configured here is a pretty safe baseline), so I recommend reading through their extensive documentation on the topic. In addition, I recommend configuring passwords and 2FA within each of the services you host for extra security, alongisde a local firewall to control access on your local network.
