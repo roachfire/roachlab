@@ -5,23 +5,23 @@ A set of applications to assist in building and managing our network. This combi
 - [Fail2Ban](https://hub.docker.com/r/linuxserver/fail2ban)(Currently not implemented): Fail2ban is a daemon to ban hosts that cause multiple authentication errors.
 - [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/): Protect your web servers from direct attack. From the moment an application is deployed, developers and IT spend time locking it down — configuring ACLs, rotating IP addresses, and using clunky solutions like GRE tunnels. There’s a simpler and more secure way to protect your applications and web servers from direct attacks: Cloudflare Tunnel. Ensure your server is safe, no matter where it’s running: public cloud, private cloud, Kubernetes cluster, or even a Mac mini under your TV.
 # Rationale
-Getting my networking stack was a pain for me when I was first getting started, especially when I was trying to wrap my head around the ins-and-outs of networking. I tried many solutions for networking and exposing my services, but none of the solutions I found met my requirements for simplicity of configuration and deployment. As someone working a full-time job and working through grad school, I needed a networking stack that could be set up simply in a fire-and-forget fashion. Enter Cloudflare Tunnels. These things revolutionized my lab, and I hope they'll do the same for you. 
+Getting my networking stack was a pain for me when I was first getting started, especially when I was trying to wrap my head around the ins-and-outs of networking. I tried many solutions for networking and exposing my services, but none of the solutions I found met my requirements for simplicity of configuration and deployment. As someone working a full-time job and going through grad school, I needed a networking stack that could be set up simply in a fire-and-forget fashion. Enter Cloudflare Tunnels. These things revolutionized my lab, and I hope they'll do the same for you. 
 # Things I plan on adding:
 - Integrating the Cloudflare container into the docker-compose file.
 - Configuration guide for Fail2Ban (it's just a placeholder for now).
 - A tutorial on setting up failover for NGINX, Pi-hole, and the Cloudflare tunnel.
 # Before we get started...
 These are just some suggestions that might make things a little easier for you.
-- A hypervisor like Proxmox to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
-- A password manager to securely manage passwords for your services.
+- A hypervisor like [Proxmox](https://www.proxmox.com/en/) to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
+- A password manager to securely manage passwords for your services. I recommend [Bitwarden](https://bitwarden.com/)
 - A TOTP application to facilitate generating access codes to your services that are compatible with it.
-- An application like Portainer to help manage the containers you'll be creating. This tool is invaluable for troubleshooting and monitoring your containers.
+- An application like [Portainer](https://www.portainer.io/) to help manage the containers you'll be creating. This tool is invaluable for troubleshooting and monitoring your containers.
 - A service like Tailscale to allow you to remotely manage your services (and facilitate secure remote streaming). You can find installation documentation for your OS here. This is helpful for when Cloudflare or another stop in your network chain goes down.
-- A Debian-based machine for your Docker host. I run my services on a Ubuntu Server host, so this tutorial was designed for that operating environment.
+- A Debian-based machine for your Docker host. I run my services on an Ubuntu Server host, so this tutorial was designed for that operating environment.
 - A network firewall to secure things. Cloudflare handles most of the major security stuff for us, but just in case something gets through, you'll want to make sure everything is as isolated as possible.
 The next things are required for this setup to work.
 - Knowledge of firewalls, port mappings, and network security.
-- Docker and docker-compose installed on your host machine.
+- [Docker](https://docs.docker.com/desktop/install/linux-install/) and [docker-compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository) installed on your host machine.
 - A domain that uses Cloudflare for DNS. I purchased mine from [Porkbun](https://porkbun.com/). Documentation for how to connect domains to Cloudflare's DNS can be found [here](https://developers.cloudflare.com/fundamentals/get-started/setup/add-site/). The domain will cost you, but all of the stuff on the Cloudflare side of things will be free.
 # Let's begin!
 ## Creating our directories
