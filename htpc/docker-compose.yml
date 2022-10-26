@@ -57,7 +57,7 @@ services:
     image: linuxserver/sonarr:latest
     restart: unless-stopped
     ports:
-      - 7878:7878
+      - 8989:8989
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
@@ -88,7 +88,7 @@ services:
     image: linuxserver/radarr:latest
     restart: unless-stopped
     ports:
-      - 8989:8989
+      - 7878:7878
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
