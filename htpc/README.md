@@ -60,12 +60,12 @@ The first thing I like to set up is my indexers. Go to the Prowlarr WebUI by ent
 ### Plex 
 **A note on Plex and VLANS: make sure that you access your Plex server from a device on the same VLAN for initial setup, as Plex does not allow connections from other VLAN by default. For example: if your Plex is on 192.168.20.0/24, it will not accept connections from 192.168.30.0/24**.
 
-Enter "dockerhostIPaddress:32400/web" into your browser. You should see the Plex Media Server setup page show up. You'll be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. Next we need to configure Plex's library files. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. Your music library should be added to `/data/music`. The next thing I recommend configuring in Plex is going to `Settings` -> `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
+Enter "<dockerhostIPaddress>:32400/web" into your browser. You should see the Plex Media Server setup page show up. You'll be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. Next we need to configure Plex's library files. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. Your music library should be added to `/data/music`. The next thing I recommend configuring in Plex is going to `Settings` -> `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
 
 ### Sonarr
 **Note for Sonarr, Radarr, and Lidarr permissions: these apps will require permission to read and write to the /$SRVR/complete/tv, /$SRVR/complete/movies, and the /$SRVR/complete/music directories. To make this simple, I recommend running `chmod 777 /$SRVR/complete/directoryname/` on these directories to make sure permission is granted**
 
-Now that we have our indexers and Plex set up, lets configure Sonarr.
+Now that we have our indexers and Plex set up, lets configure Sonarr. Sonarr can be accessed at "<dockerhostIPaddress>:8989"
 - Go to `Settings` -> `General` and create a username and password. Restart the application when prompted.
 - Once you refresh the page and login, navigate back to `General` if needed and copy the API Key.
 - Return to the Prowlarr webUI and go to `Settings` -> `Apps`. 
@@ -91,7 +91,7 @@ No configuration is really needed here. Everything is set up to work with this a
 I personally don't use these services, so I'll refer you back to the sebgl project linked in the first section for a setup guide.
 # Finishing up
 To finish, let's make sure our services are working correctly. 
-- Open your Transmission webUI at "dockerhostIPaddress:9091", then open Sonarr, Radarr, and Plex. 
+- Open your Transmission webUI at "<dockerhostIPaddress>:9091", then open Sonarr, Radarr, and Plex. 
 - Login to whichever app you want to test first and click `Add New`.
 - Search for a show you like and click on it. Make sure that the media is being stored in the proper root folder for the service.
 - Select the monitor settings you want and your preferred quality profile (for testing purposes, I recommend leaving the quality profile at "Any". 
