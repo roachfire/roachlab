@@ -3,6 +3,7 @@ services:
 
   transmission:
     image: haugene/transmission-openvpn
+    container_name: transmission-openvpn
     cap_add:
       - NET_ADMIN
     devices:
