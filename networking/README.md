@@ -1,5 +1,5 @@
 # What are we deploying?
-A set of applications to assist in building and managing our network.
+A set of applications to assist in building and managing our network. This combination of services will intelligently handle simple local access and secure remote access for all of your selfhosted applications, no port-forwarding or firewall configuration required.
 - [Nginx Proxy Manager](https://hub.docker.com/r/jc21/nginx-proxy-manager): This project comes as a pre-built docker image that enables you to easily forward to your websites running at home or otherwise, including free SSL, without having to know too much about Nginx or Letsencrypt.
 - [Pi-hole](https://hub.docker.com/r/pihole/pihole): The Pi-hole® is a DNS sinkhole that protects your devices from unwanted content, without installing any client-side software.
 - [Fail2Ban](https://hub.docker.com/r/linuxserver/fail2ban): Fail2ban is a daemon to ban hosts that cause multiple authentication errors.
@@ -9,15 +9,19 @@ Getting my networking stack was a pain for me when I was first getting started, 
 # Things I plan on adding:
 - Integrating the Cloudflare container into the docker-compose file.
 - Configuration guide for Fail2Ban (it's just a placeholder for now).
+- A tutorial on setting up failover for NGINX, Pi-hole, and the Cloudflare tunnel.
 # Before we get started...
 These are just some suggestions that might make things a little easier for you.
 - A hypervisor like Proxmox to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
+- A password manager to securely manage passwords for your services.
+- A TOTP application to facilitate generating access codes to your services that are compatible with it.
 - An application like Portainer to help manage the containers you'll be creating. This tool is invaluable for troubleshooting and monitoring your containers.
 - A service like Tailscale to allow you to remotely manage your services (and facilitate secure remote streaming). You can find installation documentation for your OS here. This is helpful for when Cloudflare or another stop in your network chain goes down.
 - A Debian-based machine for your Docker host. I run my services on a Ubuntu Server host, so this tutorial was designed for that operating environment.
 - A network firewall to secure things. Cloudflare handles most of the major security stuff for us, but just in case something gets through, you'll want to make sure everything is as isolated as possible.
 The next things are required for this setup to work.
-- Docker and docker-compose installed.
+- Knowledge of firewalls, port mappings, and network security.
+- Docker and docker-compose installed on your host machine.
 - A domain that uses Cloudflare for DNS. I purchased mine from [Porkbun](https://porkbun.com/). Documentation for how to connect domains to Cloudflare's DNS can be found [here](https://developers.cloudflare.com/fundamentals/get-started/setup/add-site/). The domain will cost you, but all of the stuff on the Cloudflare side of things will be free.
 # Let's begin!
 ## Creating our directories
