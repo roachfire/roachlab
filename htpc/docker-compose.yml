@@ -17,6 +17,9 @@ services:
       - ${ROOT}/config/transmission:/config # Folder where Transmission's configuration files will be stored.
       - ${SRVR}/downloads/torrent-blackhole:/watch # Folder for Tranmission to watch for .magnet files to automatically download.
     environment:
+      - TRANSMISSION_DOWNLOAD_DIR=/downloads/complete
+      - TRANSMISSION_INCOMPLETE_DIR=/downloads/incomplete
+      - TRANSMISSION_HOME=/config
       - OPENVPN_PROVIDER=MULLVAD # Enter your VPN provider's name here.
       - OPENVPN_USERNAME=123456789 # Enter your VPN username here.
       - OPENVPN_PASSWORD=m # Enter your VPN password here. 
