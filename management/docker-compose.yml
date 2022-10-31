@@ -60,19 +60,16 @@ services:
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME} # Change this in the .env file.
       - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PWD} # Change this in the .env file.
  
- heimdall:
-    image: lscr.io/linuxserver/heimdall:latest
-    container_name: heimdall
-    environment:
-      - PUID=${PUID} # .env file.
-      - PGID=${PUID} # .env file.
-      - TZ=${TZ} # .env file.
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
     volumes:
-      - /heimdall:/config
+      - ${ROOT}/config/homarr:/app/data/configs
+      - ${ROOT}/config/homarr/icons:/app/public/icons
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 1080:80
-      - 8443:443
-    restart: unless-stopped    
+      - '7575:7575'
   
   grafana:
     image: grafana/grafana-oss:latest
