@@ -15,10 +15,10 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 # Things I plan on adding:
 - A Tailscale docker container to facilate secure remote access to your services without opening any ports.
 - A firewall configuration guide to lockdown access to your applications.
-~~- A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.~~
+- ~~A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.~~
 - Adapting the project to be aimed primarily at NAS users.
-~~- [Plex Requests](https://dediseedbox.com/wiki/knowledgebase/plex-requests/) to make it easier to add TV, movies, and music to Plex.~~
-~~- [Ombi](https://hub.docker.com/r/linuxserver/ombi/) to further enhance the request experience for those sharing their Plex servers with large amounts of users.~~
+- ~~[Plex Requests](https://dediseedbox.com/wiki/knowledgebase/plex-requests/) to make it easier to add TV, movies, and music to Plex.~~
+- ~~[Ombi](https://hub.docker.com/r/linuxserver/ombi/) to further enhance the request experience for those sharing their Plex servers with large amounts of users.~~
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
 - The nzb360 app
