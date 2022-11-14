@@ -8,16 +8,17 @@ A fully-featured home theater application stack with services to automatically d
 - [Bazarr](https://hub.docker.com/r/linuxserver/bazarr): Bazarr is a companion application to Sonarr and Radarr. It can manage and download subtitles based on your requirements. You define your preferences by TV show or movie and Bazarr takes care of everything for you.
 - [Plex-Server](https://hub.docker.com/r/plexinc/pms-docker): With our easy-to-install Plex Media Server software and your Plex apps, available on all your favorite phones, tablets, streaming devices, gaming consoles, and smart TVs, you can stream your video, music, and photo collections any time, anywhere, to any device.
 - [nzbget](https://hub.docker.com/r/linuxserver/nzbget): Nzbget is a usenet downloader, written in C++ and designed with performance in mind to achieve maximum download speed by using very little system resources.
+- [Overseer](https://hub.docker.com/r/linuxserver/overseerr): Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.
 - [Watchtower](https://hub.docker.com/r/containrrr/watchtower): A process for automating Docker container base image updates. Automatic updates can cause issues (they haven't in my experience, but you've been warned). If you're worried about updates breaking things, I recommend having working backups of everything and using a test environment to test updates to your services. Once you've tested your updates, enable the Watchtowever container to automatically update them (or you can use docker-compose).
 # Rationale
 This project was originally a fork of a project by [sebgl](https://github.com/sebgl/htpc-download-box) but after following his tutorial I encountered some issues with deployment and noticed some documentation that could've been improved upon. Thus I feel the changes I have made and plan on making are significant enough to warrant creating my own repo. The goal of this project is to create a home theater software stack with the least amount of work required by the user while providing the flexibility to accomodate those who do wish to change things. I hope you can see this focus in some of the changes I have made to sebgl's original work. All of this is not to say that sebgl's work is bad, but for someone like me who doesn't have the time nor expertise to figure out some of the steps required on my own, I needed a better solution. I hope that this works well for people in my own shoes. Now, let's get on with the show.
 # Things I plan on adding:
 - A Tailscale docker container to facilate secure remote access to your services without opening any ports.
 - A firewall configuration guide to lockdown access to your applications.
-- A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.
+~~- A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.~~
 - Adapting the project to be aimed primarily at NAS users.
-~~- [Plex Requests](https://dediseedbox.com/wiki/knowledgebase/plex-requests/) to make it easier to add TV, movies, and music to Plex.
-- [Ombi](https://hub.docker.com/r/linuxserver/ombi/) to further enhance the request experience for those sharing their Plex servers with large amounts of users.~~
+~~- [Plex Requests](https://dediseedbox.com/wiki/knowledgebase/plex-requests/) to make it easier to add TV, movies, and music to Plex.~~
+~~- [Ombi](https://hub.docker.com/r/linuxserver/ombi/) to further enhance the request experience for those sharing their Plex servers with large amounts of users.~~
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
 - The nzb360 app
@@ -65,6 +66,8 @@ Finally, we can connect Plex to Sonnar.
 That's it! Sonarr is ready to go.
 ### Radarr and Lidarr
 To configure Radarr and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878" and "dockerhostIPaddress:8686", respectively. Remember that Radarr should store movie folders in the `/movies/` directory and Lidarr should store music folders in the `/music/` directory.
+### Overseer
+COMING SOON
 ### Watchtower
 No configuration is really needed here. Everything is set up to work with this application stack automatically. However, if you add additional applications and want them to also automatically update, you will need to add the names of the containers to the Watchtower section of the docker-compose.yml file.
 ### About Bazarr and nzbget
