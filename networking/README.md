@@ -24,6 +24,7 @@ The next things are required for this setup to work.
 - Knowledge of firewalls, port mappings, and network security.
 - [Docker](https://docs.docker.com/desktop/install/linux-install/) and [docker-compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository) installed on your host machine.
 - A domain that uses Cloudflare for DNS. I purchased mine from [Porkbun](https://porkbun.com/). Documentation for how to connect domains to Cloudflare's DNS can be found [here](https://developers.cloudflare.com/fundamentals/get-started/setup/add-site/). The domain will cost you, but all of the stuff on the Cloudflare side of things will be free.
+- Disabling systemd-resolved as it conflicts with Pi-hole over port 53. This can be done with the commands `sudo systemctl disable systemd-resolved.service` and `sudo systemctl stop systemd-resolved`. Next, you must edit your resolv.conf to add a replacement nameserver, since you just disabled the internal one: `sudo nano /etc/resolv.conf` then comment out the `nameserver` line. Add another line that says `nameserver 8.8.8.8` or any other DNS server you'd like to use. Save and exit the file.
 # Let's begin!
 ## Creating our directories
 The first thing we'll need to do is create directories for some of our containers to store their data. `sudo mkdir /networking/` will take care of this for us. Since this stack is simple, this is the only directory we need to create.
