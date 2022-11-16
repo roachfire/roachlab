@@ -23,16 +23,23 @@ The next things are required for this setup to work.
 - At least one virtual machine. This goes without saying I hope.
 
 ## Creating our directories
-Directory setup for this stack is simple. We'll use '/management/' as our root directory. Create this directory with the command 'sudo mkdir /management/'. That's it! We're ready for the next parts of configuration.
+Directory setup for this stack is simple. We'll use `/management/` as our root directory. Create this directory with the command 'sudo mkdir /management/'. That's it! We're ready for the next parts of configuration.
 
 ## Installing and Configuring Portainer
-Before we deploy our containers, we want to be able to manage them effectively. This will be done through Portainer. Portainer can stop, start, pause, create, and deploy our containers. To install it, insert the following command into the terminal: 'docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest'. This command will install Portainer and 
-set it to broadcast the Web-UI over ports 8000 and 9443. To setup Portainer, enter "https://<dockerhostIPaddress>:9443" in your browser. You should see a page to create the initial admin user for Portainer. Create your username and password and login. 
+Before we deploy our containers, we want to be able to manage them effectively. This will be done through Portainer. Portainer can stop, start, pause, create, and deploy our containers. To install it, insert the following command into the terminal: `docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest`. This command will install Portainer and 
+set it to broadcast the Web-UI over ports 8000 and 9443. To setup Portainer, enter "https://<dockerhostIPaddress>:9443" in your browser. You should see a page to create the initial admin user for Portainer. Create your username and password and login.
 
-In the Environment Wizard that appears after logging in, select 'Get Started' and connect to the local Docker envrionment. Next, I recommend you go to *Settings -> SSL Certificate* and enable "Force HTTPS only". This will help increase security down the line. We're done with Portainer config but we're not done using Portainer.
+In the Environment Wizard that appears after logging in, select *Get Started* and connect to the local Docker envrionment. Next, I recommend you go to *Settings -> SSL Certificate* and enable "Force HTTPS only". This will help increase security down the line. We're done with Portainer config but we're not done using Portainer.
 
-## Setting up our .env and docker-compose.yml
-Copy
+## Deploying our Services
+Typically, docker-compose.yml's are deployed through the docker-compose CLI command. However, Portainer has built-in support for deploying your Docker-Compose files. Portainer's built-in compose editor will point out errors in your .yaml/.yml and give you a simple interface to control administrative permissions. For now on, we'll be handling our deployments here.
+1. In the Portainer UI, go to the *Stacks* page and select *+ Add Stack*.
+2. Name the stack "management" and select the "Repository" build method.
+3. In the *Repository URL* section paste "https://github.com/roachfire/roachlab". Edit *Compose path* to say "management/docker-compose.yml".
+4. You can configure automatic updates if you want, but I really don't recommend this for repos you don't directly control.
+5. For *Environment variables*, copy the text from the `.env` file in the management directory and paste it into a text file. Edit the file where the assigned variable values are "Changeme", using the comments as instructions.
+6. Save the file as something easy to remember like "management.env". In the Portainer UI, select *Load variables from .env file* and select the saved .env.
+7. Verify that everything looks correct and then select *Deploy the stack*. Everything should deploy smoothly from there.
 
 ## Configuring our applications
 
