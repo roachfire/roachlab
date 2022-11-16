@@ -13,7 +13,7 @@ services:
       - .${ROOT}/nginx-proxy-manager/data:/data
       - ./letsencrypt:/etc/letsencrypt
 
-pihole:
+  pihole:
     container_name: pihole
     image: pihole/pihole:latest
     ports:
@@ -23,7 +23,7 @@ pihole:
       - "80:80/tcp"
     environment:
       TZ: ${TZ}
-      WEBPASSWORD: ${PIHOLE_PWDP}
+      WEBPASSWORD: ${PIHOLE_PWD}
     # Volumes store your data between container upgrades
     volumes:
       - './etc-pihole:/etc/pihole'
