@@ -8,7 +8,7 @@ A set of applications to assist in building and managing our network. This combi
 Getting my networking stack was a pain for me when I was first getting started, especially when I was trying to wrap my head around the ins-and-outs of networking. I tried many solutions for networking and exposing my services, but none of the solutions I found met my requirements for simplicity of configuration and deployment. As someone working a full-time job and going through grad school, I needed a networking stack that could be set up simply in a fire-and-forget fashion. Enter Cloudflare Tunnels. These things revolutionized my lab, and I hope they'll do the same for you. 
 # Things I plan on adding:
 - Integrating the Cloudflare container into the docker-compose file.
-- Configuration guide for Fail2Ban (it's just a placeholder for now).
+- ~Configuration guide for Fail2Ban (it's just a placeholder for now).~
 - A tutorial on setting up failover for NGINX, Pi-hole, and the Cloudflare tunnel.
 # Before we get started...
 These are just some suggestions that might make things a little easier for you.
