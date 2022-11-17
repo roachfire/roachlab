@@ -48,6 +48,8 @@ This container can be accessed at http://<dockerhostipaddress>:82/admin. Upon en
 1. Enter the password you added to the `.env` file to access the UI. Pi-hole is preconfigured with a blocklist and pretty much every setting you'll need, but feel free to add other blocklists and mess around with the settings when we're finished here.
 2. Expand **Local DNS** in the sidebar and select **DNS records**. You'll be taken to a page where you can add local DNS redirect records. Add all of the services you self-host, including those that you don't want exposed to the web, entering "<servicename>.your.domain" in the **Domain:** box and the IP address of the server hosting your NGINX Proxy Manager instance in the **IP Address:** box.
 3. Once you're done there, you'll need to access your router's admin settings and set the IP address of the server running Pi-hole as your DNS server. Or you can set the Pi-hole host as your DNS server on a device-by-device basis. I recommend deploying a second instance of Pi-hole to serve as a backup in case your main instance fails.
+### Fail2Ban
+Fail2Ban's setup is fairly involved and I still haven't fully wrapped my head around it. However, DB Tech on YouTube has a great tutorial for setting up Fail2Ban to watch your containers and ban IPs through Cloudflare that can be found [here](https://www.youtube.com/watch?v=Ha8NIAOsNvo).
 ### Cloudflare tunnel
 Getting the tunnel started is fairly simple.
 #### Creating the tunnel
