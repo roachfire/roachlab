@@ -30,3 +30,21 @@ services:
       - './etc-dnsmasq.d:/etc/dnsmasq.d'
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     restart: unless-stopped
+
+  fail2ban:
+    image: crazymax/fail2ban:latest
+    container_name: fail2ban
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - "${ROOT}/config/fail2ban:/data"
+      - "/var/log/auth.log:/var/log/auth.log:ro"
+      - "${ROOT}/nginx-proxy-manager/data/logs/:/log/npm/:ro"
+    restart: always
+    environment:
+    - TZ=${TZ}
+    - F2B_LOG_TARGET=STDOUT
+    - F2B_LOG_LEVEL=INFO
+    - F2B_DB_PURGE_AGE=1d
