@@ -33,7 +33,7 @@ The first thing we'll need to do is create directories for some of our container
 ## Configuring our applications
 If everything installed properly, we should see our three containers running when we run the command `docker ps`.
 ### Nginx Proxy Manager
-This container can be accessed at http://dockerhostipaddress:81. Upon entering the WebUI, you'll be presented with a page to create an admin account. Walk through the setup process and you'll be presented with the Nginx Proxy Manager dashboard. The first thing we're going to do is create our SSL cert. To make things simple, we're going to use a wildcard cert that will apply to all of our subdomains.
+This container can be accessed at http://dockerhostipaddress:81. Upon entering the WebUI, you'll be presented with a page to login. The default username is "admin@example.com" and the password is "changeme." Walk through the setup process and you'll be presented with the Nginx Proxy Manager dashboard. The first thing we're going to do is create our SSL cert. To make things simple, we're going to use a wildcard cert that will apply to all of our subdomains.
 #### Creating our SSL certificate
 1. Go to the **SSL Certificates** page. 
 2. Click **Add SSL Certificate**. Select **Let's Encrypt**.
