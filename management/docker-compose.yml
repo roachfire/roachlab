@@ -3,8 +3,6 @@ version: '3'
 volumes:
   grafana-data:
     driver: local
-  influxdb-storage:
-    driver: local
   prometheus-data:
     driver: local
 
@@ -86,11 +84,11 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - /etc/prometheus:/etc/prometheus
+      - /etc/prometheus:${ROOT}/config/prometheus
       - prometheus-data:/prometheus
     restart: unless-stopped
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--config.file=${ROOT}/config/prometheus/prometheus.yml"
       
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -124,7 +122,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: 
+    command: ${APPLICATIONS}
     
   bookstack:
     image: lscr.io/linuxserver/bookstack
