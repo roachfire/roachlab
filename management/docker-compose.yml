@@ -89,7 +89,7 @@ services:
     restart: unless-stopped
     command:
       - "--config.file=${ROOT}/config/prometheus/prometheus.yml"
-      
+  
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
@@ -142,6 +142,7 @@ services:
     restart: unless-stopped
     depends_on:
       - bookstack_db
+  
   bookstack_db:
     image: lscr.io/linuxserver/mariadb
     container_name: bookstack_db
