@@ -50,8 +50,6 @@ You can either copy and paste from the docker-compose.yml and .env files in this
 Next, we need to set up our docker-compose.yml. `sudo nano docker-compose.yml` to create the file. Paste the text from my file into here. There's only a few things we'll need to change here. Scroll down to your `transmission`. Find the `environment` section. This is where you'll set up your VPN. Enter your provider's name, your username, and your password. I use Mullvad, so the values there are configured for a Mullvad user. If you have another provider, refer to the excellent documentation [here](https://haugene.github.io/docker-transmission-openvpn/supported-providers/) to configure the container for your provider. Then, go down to the `LOCAL_NETWORK` line. Enter the CIDR of your local network so that the Transmission container's web-UI can be accessed on your local network. That's it! Our services are ready to be deployed. Save and exit the docker-compose.yml and enter the command `docker-compose up -d`. Monitor the terminal to ensure that everything deploys properly. Once that's done, we can see the status of our containers with `docker ps`. Now, onto the application configuration.
 
 ### Deployment through Portainer's "stacks" feature
-
-## Configuring our applications
 Typically, docker-compose.yml's are deployed through the docker-compose CLI command. However, Portainer has built-in support for deploying your Docker-Compose files. Portainer's built-in compose editor will point out errors in your .yaml/.yml and give you a simple interface to control administrative permissions.
 1. In the Portainer UI, go to the **Stacks** page and select **+ Add Stack**.
 2. Name the stack "htpc" and select the "Repository" build method.
@@ -60,6 +58,8 @@ Typically, docker-compose.yml's are deployed through the docker-compose CLI comm
 5. For **Environment variables**, copy the text from the `.env` file in the management directory and paste it into a text file. Edit the file where the assigned variable values are "Changeme", using the comments as instructions.
 6. Save the file as something easy to remember like "htpc.env". In the Portainer UI, select **Load variables from .env file** and select the saved `.env`.
 7. Verify that everything looks correct and then select **Deploy the stack**. Everything should deploy smoothly from there.
+
+## Configuring our applications
 
 ### Prowlarr
 The first thing I like to set up is my indexers. Go to the Prowlarr WebUI by entering "dockerhostIPaddress:9696" into your browser. Next we want to do is go to `Settings` -> `General` and create a username and password. Restart as prompted. Next, we want to the `Indexers` section at the top of the left pane. Click `Add Indexer` and add the indexers you want to use. I typically sort by `en-US` for language and `Public` for privacy. Currently, I use 1337x, AnimeClipse, AniRena, kickasstorrents.to, and The Pirate Bay. Now we need to configure the rest of our applications.
