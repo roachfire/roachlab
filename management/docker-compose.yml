@@ -67,6 +67,9 @@ services:
   grafana:
     image: grafana/grafana-oss:latest
     container_name: grafana
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
     ports:
       - "3000:3000"
     volumes:
