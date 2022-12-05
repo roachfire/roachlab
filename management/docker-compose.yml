@@ -1,11 +1,5 @@
 version: '3'
 
-volumes:
-  grafana-data:
-    driver: local
-  prometheus-data:
-    driver: local
-
 services:
 
   snipe-db:
@@ -52,7 +46,8 @@ services:
     ports:
       - '8086:8086'
     volumes:
-      - influxdb-storage:/var/lib/influxdb
+      - ${ROOT}/container_data/influxdb:var/lib/influxdb2
+      - ${ROOT/config/influxdb:/etc/influxdb2
     environment:
       - INFLUXDB_DB=db0
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME} # Change this in the .env file.
@@ -75,7 +70,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - grafana-data:/var/lib/grafana
+      - ${ROOT}/container_data/grafana:/var/lib/grafana
     restart: unless-stopped
     
   prometheus:
@@ -84,8 +79,8 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - /etc/prometheus:${ROOT}/config/prometheus
-      - prometheus-data:/prometheus
+      - ${ROOT}/config/prometheus:/etc/prometheus
+      - ${ROOT}/container_data/prometheus:/prometheus
     restart: unless-stopped
     command:
       - "--config.file=${ROOT}/config/prometheus/prometheus.yml"
