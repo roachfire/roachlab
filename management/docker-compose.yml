@@ -75,44 +75,6 @@ services:
     volumes:
       - ${ROOT}/container_data/grafana:/var/lib/grafana
     restart: unless-stopped
-    
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ${ROOT}/config/prometheus:/etc/prometheus
-      - ${ROOT}/container_data/prometheus:/prometheus
-    restart: unless-stopped
-    command:
-      - "--config.file=${ROOT}/config/prometheus/prometheus.yml"
-  
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    # ports:
-    #   - "8080:8080"
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    devices:
-      - /dev/kmsg:/dev/kmsg
-    restart: unless-stopped
-    privileged: true
-      
-  node_exporter:
-    image: quay.io/prometheus/node-exporter:latest
-    container_name: node_exporter
-    command:
-      - '--path.rootfs=/host'
-    pid: host
-    restart: unless-stopped
-    volumes:
-      - '/:/host:ro,rslave'
      
   watchtower:
     image: containrrr/watchtower
