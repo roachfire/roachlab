@@ -46,7 +46,7 @@ services:
     ports:
       - '8086:8086'
     volumes:
-      - ${ROOT}/container_data/influxdb:var/lib/influxdb2
+      - ${ROOT}/container_data/influxdb:/var/lib/influxdb2
       - ${ROOT/config/influxdb:/etc/influxdb2
     environment:
       - INFLUXDB_DB=db0
