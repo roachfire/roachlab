@@ -47,7 +47,7 @@ services:
       - '8086:8086'
     volumes:
       - ${ROOT}/container_data/influxdb:/var/lib/influxdb2
-      - ${ROOT/config/influxdb:/etc/influxdb2
+      - ${ROOT}/config/influxdb:/etc/influxdb2
     environment:
       - INFLUXDB_DB=db0
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME} # Change this in the .env file.
