@@ -10,8 +10,10 @@ A fully-featured home theater application stack with services to automatically d
 - [nzbget](https://hub.docker.com/r/linuxserver/nzbget): Nzbget is a usenet downloader, written in C++ and designed with performance in mind to achieve maximum download speed by using very little system resources.
 - [Overseer](https://hub.docker.com/r/linuxserver/overseerr): Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.
 - [Watchtower](https://hub.docker.com/r/containrrr/watchtower): A process for automating Docker container base image updates. Automatic updates can cause issues (they haven't in my experience, but you've been warned). If you're worried about updates breaking things, I recommend having working backups of everything and using a test environment to test updates to your services. Once you've tested your updates, enable the Watchtowever container to automatically update them (or you can use docker-compose).
+
 # Rationale
 This project was originally a fork of a project by [sebgl](https://github.com/sebgl/htpc-download-box) but after following his tutorial I encountered some issues with deployment and noticed some documentation that could've been improved upon. Thus I feel the changes I have made and plan on making are significant enough to warrant creating my own repo. The goal of this project is to create a home theater software stack with the least amount of work required by the user while providing the flexibility to accomodate those who do wish to change things. I hope you can see this focus in some of the changes I have made to sebgl's original work. All of this is not to say that sebgl's work is bad, but for someone like me who doesn't have the time nor expertise to figure out some of the steps required on my own, I needed a better solution. I hope that this works well for people in my own shoes. Now, let's get on with the show.
+
 # Things I plan on adding:
 - A Tailscale docker container to facilate secure remote access to your services without opening any ports.
 - A firewall configuration guide to lockdown access to your applications.
@@ -35,18 +37,37 @@ The next things are required for this setup to work.
 - A VPN service. I recommend Mullvad, PIA, or Nord for this particular setup, but most should work just fine with some tweaking.
 - If you plan on using separate machines (virtual or physical) for your storage server and your docker host make sure that both have dedicated IP addresses so that they can always find each other in the event of a network or machine restart.
 - Plenty of RAM and storage. RAM is useful for caching large streams and downloads while storage is going to be useful for... You know, storing your data!
+
 # Let's begin!
+
 ## Creating our directories
 The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`. Use this same commmand to create a working directory for our project (something like /htpcproject/).
-## Setting up our .env and docker-compose.yml
+
+## Deploying our services
+
+### Deployment through docker-compose
 You can either copy and paste from the docker-compose.yml and .env files in this repo or you can download them directly. `cd` into your project directory and `sudo nano .env` to create the .env file. Once there, you'll need to copy and paste the text from my file. Change the values for `TZ`, `ROOT`, and `SRVR` to ones that fit your setup. Values for `TZ` can be found [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) and the `ROOT` and `SRVR` values will be the directories you created previously. You can change the `PUID` and `PGID` if you want, but it's not necessary. Save and close our .env with CTRL + X. Confirm that you wish to save changes and that you like the file name. 
 Next, we need to set up our docker-compose.yml. `sudo nano docker-compose.yml` to create the file. Paste the text from my file into here. There's only a few things we'll need to change here. Scroll down to your `transmission`. Find the `environment` section. This is where you'll set up your VPN. Enter your provider's name, your username, and your password. I use Mullvad, so the values there are configured for a Mullvad user. If you have another provider, refer to the excellent documentation [here](https://haugene.github.io/docker-transmission-openvpn/supported-providers/) to configure the container for your provider. Then, go down to the `LOCAL_NETWORK` line. Enter the CIDR of your local network so that the Transmission container's web-UI can be accessed on your local network. That's it! Our services are ready to be deployed. Save and exit the docker-compose.yml and enter the command `docker-compose up -d`. Monitor the terminal to ensure that everything deploys properly. Once that's done, we can see the status of our containers with `docker ps`. Now, onto the application configuration.
+
+### Deployment through Portainer's "stacks" feature
+
 ## Configuring our applications
+Typically, docker-compose.yml's are deployed through the docker-compose CLI command. However, Portainer has built-in support for deploying your Docker-Compose files. Portainer's built-in compose editor will point out errors in your .yaml/.yml and give you a simple interface to control administrative permissions.
+1. In the Portainer UI, go to the **Stacks** page and select **+ Add Stack**.
+2. Name the stack "htpc" and select the "Repository" build method.
+3. In the **Repository URL** section paste "https://github.com/roachfire/roachlab". Edit **Compose path** to say "htpc/docker-compose.yml".
+4. You can configure automatic updates if you want, but I really don't recommend this for repos you don't directly control.
+5. For **Environment variables**, copy the text from the `.env` file in the management directory and paste it into a text file. Edit the file where the assigned variable values are "Changeme", using the comments as instructions.
+6. Save the file as something easy to remember like "htpc.env". In the Portainer UI, select **Load variables from .env file** and select the saved `.env`.
+7. Verify that everything looks correct and then select **Deploy the stack**. Everything should deploy smoothly from there.
+
 ### Prowlarr
 The first thing I like to set up is my indexers. Go to the Prowlarr WebUI by entering "dockerhostIPaddress:9696" into your browser. Next we want to do is go to `Settings` -> `General` and create a username and password. Restart as prompted. Next, we want to the `Indexers` section at the top of the left pane. Click `Add Indexer` and add the indexers you want to use. I typically sort by `en-US` for language and `Public` for privacy. Currently, I use 1337x, AnimeClipse, AniRena, kickasstorrents.to, and The Pirate Bay. Now we need to configure the rest of our applications.
+
 ### Plex 
 **A note on Plex and VLANS: make sure that you access your Plex server from a device on the same VLAN for initial setup, as Plex does not allow connections from other VLAN by default. For example: if your Plex is on 192.168.20.0/24, it will not accept connections from 192.168.30.0/24**.
 Enter "<dockerhostIPaddress>:32400/web" into your browser. You should see the Plex Media Server setup page show up. You'll be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. Next we need to configure Plex's library files. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. Your music library should be added to `/data/music`. The next thing I recommend configuring in Plex is going to `Settings` -> `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
+
 ### Sonarr
 **Note for Sonarr, Radarr, and Lidarr permissions: these apps will require permission to read and write to the /$SRVR/complete/tv, /$SRVR/complete/movies, and the /$SRVR/complete/music directories. To make this simple, I recommend running `chmod 777 /$SRVR/complete/directoryname/` on these directories to make sure permission is granted**
 Now that we have our indexers and Plex set up, lets configure Sonarr. Sonarr can be accessed at "<dockerhostIPaddress>:8989"
@@ -64,12 +85,16 @@ Finally, we can connect Plex to Sonnar.
 - Go to `Connect` and click the `+` button. 
 - Click `Plex Media Server`and configure it as needed for your setup. Click `Authenticate with Plex.tv` and login with your Plex account.
 That's it! Sonarr is ready to go.
+
 ### Radarr and Lidarr
 To configure Radarr and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878" and "dockerhostIPaddress:8686", respectively. Remember that Radarr should store movie folders in the `/movies/` directory and Lidarr should store music folders in the `/music/` directory.
+
 ### Overseer
 COMING SOON
+
 ### Watchtower
 No configuration is really needed here. Everything is set up to work with this application stack automatically. However, if you add additional applications and want them to also automatically update, you will need to add the names of the containers to the Watchtower section of the docker-compose.yml file.
+
 ### About Bazarr and nzbget
 I personally don't use these services, so I'll refer you back to the sebgl project linked in the first section for a setup guide.
 # Finishing up
