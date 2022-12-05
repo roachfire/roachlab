@@ -23,6 +23,7 @@ These are just some suggestions that might make things a little easier for you.
 - A service like Tailscale to allow you to remotely manage your services (and facilitate secure remote streaming). You can find installation documentation for your OS here. This is helpful for when Cloudflare or another stop in your network chain goes down.
 - A Debian-based machine for your Docker host. I run my services on an Ubuntu Server host, so this tutorial was designed for that operating environment.
 - A network firewall to secure things. Cloudflare handles most of the major security stuff for us, but just in case something gets through, you'll want to make sure everything is as isolated as possible.
+
 The next things are required for this setup to work.
 - Knowledge of firewalls, port mappings, and network security.
 - [Docker](https://docs.docker.com/desktop/install/linux-install/) and [docker-compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository) installed on your host machine.
