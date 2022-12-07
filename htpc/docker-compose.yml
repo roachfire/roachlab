@@ -2,8 +2,8 @@ version: "3.4"
 services:
 
   transmission:
-    image: haugene/transmission-openvpn
     container_name: transmission-openvpn
+    image: haugene/transmission-openvpn
     cap_add:
       - NET_ADMIN
     devices:
@@ -13,24 +13,75 @@ services:
       - "9091:9091"
       # - "8888:8888" # proxy support
     volumes:
-      - ${SRVR}/downloads:/downloads # Folder where our downloaded files will end up.
+      - ${SRVR}/data/torrents:/torrents # Folder where our downloaded files will end up.
       - ${ROOT}/config/transmission:/config # Folder where Transmission's configuration files will be stored.
-      - ${SRVR}/downloads/torrent-blackhole:/watch # Folder for Tranmission to watch for .magnet files to automatically download.
+      - ${SRVR}/data/torrents/torrent-blackhole:/watch # Folder for Tranmission to watch for .magnet files to automatically download.
     environment:
-      - TRANSMISSION_DOWNLOAD_DIR=/downloads/complete
-      - TRANSMISSION_INCOMPLETE_DIR=/downloads/incomplete
+      - TRANSMISSION_DOWNLOAD_DIR=/torrents/complete # Tells Transmission where complete downloads will be stored.
+      - TRANSMISSION_INCOMPLETE_DIR=/torrents/incomplete # Tells Transmission where incomplete downloads will be stored.
       - TRANSMISSION_HOME=/config
+      - TRANSMISSION_RESUME_DIR=/torrents/resume # Tells Transmission where resume files will be stored.
       - OPENVPN_PROVIDER=MULLVAD # Enter your VPN provider's name here.
-      - OPENVPN_USERNAME=123456789 # Enter your VPN username here.
-      - OPENVPN_PASSWORD=m # Enter your VPN password here. 
+      - OPENVPN_USERNAME=Changme # Enter your VPN username here.
+      - OPENVPN_PASSWORD=Changeme # Enter your VPN password here. 
       - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
       - LOCAL_NETWORK=192.168.20.0/24 #Configure your local network to broadcast Transmission outside of the VPN connection.
     sysctls:
         - "net.ipv6.conf.all.disable_ipv6=0" # Use this to disable IPv6 if you don't use it. Comment it out otherwise.
 
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOCKER_MODS=linuxserver/mods:universal-calibre #optional
+      - OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
+    volumes:
+      - ${ROOT}/config/calibre-web/:/config # Folder where Calibre-Web's configuration files will be stored.
+      - ${SRVR}/data/media/books:/books # Folder where your books are stored.
+    ports:
+      - 8083:8083
+    restart: unless-stopped
+    
+  calibre:
+    image: lscr.io/linuxserver/calibre:latest
+    container_name: calibre
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+     # - PASSWORD=${CALIBRE_PWD}
+     # - CLI_ARGS= #optional
+    volumes:
+      - ${ROOT}/config/calibre:/config # Folder where Calibre's configuration files will be stored.
+      - ${SRVR}/data/media/books:/books # Folder where your books are stored.
+    ports:
+      - 8080:8080
+      - 8081:8081
+    restart: unless-stopped
+    
+  readarr:
+    image: lscr.io/linuxserver/readarr:latest
+    container_name: readarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT}/config/readarr:/config # Folder where Readarr's configuration files will be stored.
+      - ${SRVR}/data:/data # Gives Readarr access to "data" directory in our media server.
+
+    ports:
+      - 8787:8787
+    restart: unless-stopped    
+
   prowlarr:
     container_name: prowlarr
-    image: lscr.io/linuxserver/prowlarr:develop
+    image: lscr.io/linuxserver/prowlarr:latest
     restart: unless-stopped
     ports:
       - 9696:9696
@@ -39,8 +90,8 @@ services:
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
     volumes:
-      - ${SRVR}/downloads/torrent-blackhole:/downloads # place where to put .torrent files for manual download
-      - ${ROOT}/config/prowlarr:/config # config files
+      - ${SRVR}/data/torrents/torrent-blackhole:/downloads # Place where .torrent files are placed so that they can be detected by Transmission.
+      - ${ROOT}/config/prowlarr:/config # Folder where Prowlarr's configuration files are stored.
 
   nzbget:
     container_name: nzbget
@@ -53,7 +104,7 @@ services:
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
     volumes:
-      - ${SRVR}/downloads:/downloads # download folder
+      - ${SRVR}/data/torrents:/downloads # download folder
       - ${ROOT}/config/nzbget:/config # config files
 
   sonarr:
@@ -68,9 +119,8 @@ services:
       - TZ=${TZ} # timezone, defined in .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${ROOT}/config/sonarr:/config # config files
-      - ${SRVR}/complete/tv:/tv # tv shows folder
-      - ${SRVR}/downloads:/downloads # download folder
+      - ${ROOT}/config/sonarr:/config # Folder where Sonarr's configuration files are stored.
+      - ${SRVR}/data:/data # Gives Sonarr access to "data" directory in our media server.
       
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -80,9 +130,8 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${ROOT}/config:/config
-      - ${SRVR}:/downloads #optional
-      - ${SRVR}/complete/music:/music # music folder
+      - ${ROOT}/config/lidarr:/config # Folder where Lidarr's configuration files are stored.
+      - ${SRVR}/data:/data  # Gives Lidarr access to "data" directory in our media server.
     restart: unless-stopped
     ports:
       - 8686:8686
@@ -94,14 +143,13 @@ services:
     ports:
       - 7878:7878
     environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
-      - TZ=${TZ} # timezone, defined in .env
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${ROOT}/config/radarr:/config # config files
-      - ${SRVR}/complete/movies:/movies # movies folder
-      - ${SRVR}/downloads:/downloads # download folder
+      - ${ROOT}/config/radarr:/config # Folder where Radarr's configuration files are stored.
+      - ${SRVR}/data:/data # Gives Radarr access to "data" directory in our media server.
   
   bazarr:
     container_name: bazarr
@@ -110,8 +158,11 @@ services:
     ports:
       - 6767:6767
     environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
+      - PUID=${PUID} 
+      - PGID=${PGID} 
+    volumes:
+    - ${ROOT}/config/bazarr:/config # Folder where Radarr's configuration files are stored.
+    - ${SRVR}/data/media:/data/media # Gives Lidarr access to "data/media" directory in our media server.
   
   overseerr:
     image: lscr.io/linuxserver/overseerr:latest
@@ -121,7 +172,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${ROOT}/config/overseerr/:/config
+      - ${ROOT}/config/overseerr:/config # Folder where Overseerr's configuration files are stored.
     ports:
       - 5055:5055
     restart: unless-stopped
@@ -135,9 +186,9 @@ services:
     ports:
       - 32400:32400
     volumes:
-      - ${ROOT}/config/plex/db:/config # plex database
-      - ${SRVR}/config/plex/transcode:/transcode # temp transcoded files
-      - ${SRVR}/complete:/data # media library
+      - ${ROOT}/config/plex/db:/config # Folder where our Plex database is stored.
+      - ${SRVR}/config/plex/transcode:/transcode # Directory for temporary transcoded files.
+      - ${SRVR}/data/media:/data # Directory of our media library.
   
   watchtower:
     image: containrrr/watchtower
@@ -145,4 +196,4 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ${APPLICATIONS}
+    command: ${APPLICATIONS} # The names of containers to be watched by Watchtower. Configured in the .env file.
