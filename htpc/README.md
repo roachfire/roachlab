@@ -8,7 +8,10 @@ A fully-featured home theater application stack with services to automatically d
 - [Bazarr](https://hub.docker.com/r/linuxserver/bazarr): Bazarr is a companion application to Sonarr and Radarr. It can manage and download subtitles based on your requirements. You define your preferences by TV show or movie and Bazarr takes care of everything for you.
 - [Plex-Server](https://hub.docker.com/r/plexinc/pms-docker): With our easy-to-install Plex Media Server software and your Plex apps, available on all your favorite phones, tablets, streaming devices, gaming consoles, and smart TVs, you can stream your video, music, and photo collections any time, anywhere, to any device.
 - [nzbget](https://hub.docker.com/r/linuxserver/nzbget): Nzbget is a usenet downloader, written in C++ and designed with performance in mind to achieve maximum download speed by using very little system resources.
-- [Overseer](https://hub.docker.com/r/linuxserver/overseerr): Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.
+- [Overseerr](https://hub.docker.com/r/linuxserver/overseerr): Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.
+- [Readarr]([https://readarr.com/](https://hub.docker.com/r/linuxserver/readarr): Readarr is a ebook collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new books from your favorite authors and will interface with clients and indexers to grab, sort, and rename them. 
+- [Calibre-Web]():
+- [Calibre]():
 - [Watchtower](https://hub.docker.com/r/containrrr/watchtower): A process for automating Docker container base image updates. Automatic updates can cause issues (they haven't in my experience, but you've been warned). If you're worried about updates breaking things, I recommend having working backups of everything and using a test environment to test updates to your services. Once you've tested your updates, enable the Watchtowever container to automatically update them (or you can use docker-compose).
 
 # Rationale
@@ -17,10 +20,12 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 # Things I plan on adding:
 - A Tailscale docker container to facilate secure remote access to your services without opening any ports.
 - A firewall configuration guide to lockdown access to your applications.
+- Documentation for Readarr, Calibre-Web, and Calibre.
 - ~~A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.~~ (Covered in my networking guide)
 - Adapting the project to be aimed primarily at NAS users.
 - ~~[Plex Requests](https://dediseedbox.com/wiki/knowledgebase/plex-requests/) to make it easier to add TV, movies, and music to Plex.~~ (Replaced with Overseerr)
 - ~~[Ombi](https://hub.docker.com/r/linuxserver/ombi/) to further enhance the request experience for those sharing their Plex servers with large amounts of users.~~ (replaced with Overseerr)
+
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
 - The nzb360 app
@@ -41,7 +46,19 @@ The next things are required for this setup to work.
 # Let's begin!
 
 ## Creating our directories
-The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`. Use this same commmand to create a working directory for our project (something like /htpcproject/).
+The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`. Use this same commmand to create a working directory for our project (something like /htpcproject/). Inside of the {SRVR} directory, implement the following file structure:
+-Server
+  -data
+  -media
+    -tv
+    -books
+    -movies
+    -music
+  -torrents
+    -complete
+    -incomplete
+    -resume
+ This file structure will prevent redundant downloads as we use our stack.
 
 ## Deploying our services
 
@@ -81,15 +98,16 @@ The next thing we need to do is to tell Sonarr to use Transmission.
 - Click `Download Clients`.
 - Click the `+` icon and click on `Transmission`.
 - Give Transmission a name and configure the rest of the settings as needed for your setup. I recommend making sure that "Remove Completed" is checked.
+- You will most likely need to map the directory that Sonarr sees to the directory that Transmission sees internally using a "Remote Path". The internal Transmission path is `/torrents/complete` whereas the Sonarr path is `/data/torrents/complete`.
 Finally, we can connect Plex to Sonnar.
 - Go to `Connect` and click the `+` button. 
 - Click `Plex Media Server`and configure it as needed for your setup. Click `Authenticate with Plex.tv` and login with your Plex account.
 That's it! Sonarr is ready to go.
 
-### Radarr and Lidarr
-To configure Radarr and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878" and "dockerhostIPaddress:8686", respectively. Remember that Radarr should store movie folders in the `/movies/` directory and Lidarr should store music folders in the `/music/` directory.
+### Radarr, Readarr, and Lidarr
+To configure Radarr, Readarr, and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878","dockerhostIPaddress:8787", and "dockerhostIPaddress:8686", respectively. Remember that each application should use the folder in the `/data/media` directory that corresponds with the media they collect.
 
-### Overseer
+### Overseer, Calibre Web, Calibre, Bazarr
 COMING SOON
 
 ### Watchtower
