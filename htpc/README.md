@@ -108,7 +108,7 @@ That's it! Sonarr is ready to go.
 To configure Radarr, Readarr, and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878","dockerhostIPaddress:8787", and "dockerhostIPaddress:8686", respectively. Remember that each application should use the folder in the `/data/media` directory that corresponds with the media they collect.
 
 ### Overseer, Calibre Web, Calibre, Bazarr
-COMING SOON!!
+COMING SOON!
 
 ### Watchtower
 No configuration is really needed here. Everything is set up to work with this application stack automatically. However, if you add additional applications and want them to also automatically update, you will need to add the names of the containers to the Watchtower section of the docker-compose.yml file.
