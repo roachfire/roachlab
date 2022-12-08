@@ -44,7 +44,7 @@ The first thing we'll need to do is create directories for some of our container
 Typically, docker-compose.yml's are deployed through the docker-compose CLI command. However, Portainer has built-in support for deploying your Docker-Compose files. Portainer's built-in compose editor will point out errors in your .yaml/.yml and give you a simple interface to control administrative permissions.
 1. In the Portainer UI, go to the **Stacks** page and select **+ Add Stack**.
 2. Name the stack "networking" and select the "Repository" build method.
-3. In the **Repository URL** section paste "https://github.com/roachfire/roachlab". Edit **Compose path** to say "networking/docker-compose.yml".
+3. In the **Repository URL** section paste "https://github.com/roachfire/roachlab". Edit **Compose path** to say "networking/networking-compose.yml".
 4. You can configure automatic updates if you want, but I really don't recommend this for repos you don't directly control.
 5. For **Environment variables**, copy the text from the `.env` file in the networking repo and paste it into a text file. Edit the file where the assigned variable values are "Changeme", using the comments as instructions.
 6. Save the file as something easy to remember like "networking.env". In the Portainer UI, select **Load variables from .env file** and select the saved `.env`.
@@ -87,7 +87,7 @@ Getting the tunnel started is fairly simple.
 #### Adding DNS records for our subdomains to Cloudflare
 1. Leaving the Cloudflare Tunnels tab open, go to your [Cloudflare Dashboard](https://dash.cloudflare.com/login) and select **DNS** from the sidebar.
 2. Click **+ Add record**. Select `CNAME` for the **Type** and enter the name of the first subdomain you'd like to be accessible online.
-3. Return to the Cloudflare Tunnels tab and copy the code under the tunnel name. Return to the DNS tab and paste that code into the **Target** textbox. Then click **Save**. If everything was configured correctly, you should be able to access your service at "service.your.domain".
+3. Return to the Cloudflare Tunnels tab and copy the code under the tunnel name. Return to the DNS tab and paste that code into the **Target** textbox. Append ".cfargotunnel.com" to the end of this text. Then click **Save**. If everything was configured correctly, you should be able to access your service at "service.your.domain".
 
 #### Securing your hosted services
 If you're like me and decided to place all of your selfhosted services in your Cloudflare tunnel (even those that are used for management), you may want to place some extra security in front of them. Thankfully, Cloudflare has an excellent security solution available for free.
