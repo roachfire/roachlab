@@ -44,7 +44,7 @@ The first thing we'll need to do is create directories for some of our container
 Typically, docker-compose.yml's are deployed through the docker-compose CLI command. However, Portainer has built-in support for deploying your Docker-Compose files. Portainer's built-in compose editor will point out errors in your .yaml/.yml and give you a simple interface to control administrative permissions.
 1. In the Portainer UI, go to the **Stacks** page and select **+ Add Stack**.
 2. Name the stack "networking" and select the "Repository" build method.
-3. In the **Repository URL** section paste "https://github.com/roachfire/roachlab". Edit **Compose path** to say "networking/docker-compose.yml".
+3. In the **Repository URL** section paste "https://github.com/roachfire/roachlab". Edit **Compose path** to say "networking/networking-compose.yml".
 4. You can configure automatic updates if you want, but I really don't recommend this for repos you don't directly control.
 5. For **Environment variables**, copy the text from the `.env` file in the networking repo and paste it into a text file. Edit the file where the assigned variable values are "Changeme", using the comments as instructions.
 6. Save the file as something easy to remember like "networking.env". In the Portainer UI, select **Load variables from .env file** and select the saved `.env`.
