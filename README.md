@@ -10,6 +10,7 @@ I hope this "guide" helps :).
 
 ## Contents
 These tutorials are meant to be followed in the order presented here. However, those who know what they are doing can forego the guides and simply use the configuration files I offer as they see fit.
-- [MANAGEMENT](/management): A project to make managing/monitoring your self-hosted services and the servers hosting them simple and easy. WIP.
+- [MANAGEMENT](/management): A project to make managing your self-hosted services and the servers hosting them simple and easy. WIP.
 - [NETWORKING](/networking): A project to make managing various aspects of your HomeLab's network simple, secure, and painless.
 - [HTPC](htpc/): A project to make self-hosting your entire home theater stack as simple as running one command (right now it takes a few though!).
+- [MONITORING](/monitoring): A project to make monitoring your homelab and its services simple and easy. WIP.
