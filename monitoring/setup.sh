@@ -76,6 +76,7 @@ if ! cp /etc/telegraf/telegraf.conf /etc/telegraf/telegraf.conf.bak; then
   echo "Error, unable to backup original file."
   exit 1
 else
+  curl -o telegraf.conf https://raw.githubusercontent.com/roachfire/roachlab/main/monitoring/telegraf.conf
   mv telegraf.conf /etc/telegraf/telegraf.conf
   echo "Operation completted. Refer back to documentation for further setup instructions."
 fi
