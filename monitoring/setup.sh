@@ -30,13 +30,12 @@ if ! wget -qO- https://repos.influxdata.com/influxdb.key | tee /etc/apt/trusted.
 fi
 
 # Adds the influxdata debian bullseye stable repo to the apt sources.
-touch /etc/apt/sources.list.d/influxdb.list
-echo "deb https://repos.influxdata.com/debian bullseye stable" | tee -a /etc/apt/sources.list.d/influxdb.list
-
 if grep -q "deb https://repos.influxdata.com/debian bullseye stable/" /etc/apt/sources.list.d/influxdb.list; then
-  echo "The influxdata repo was successfully added to /etc/apt/sources.list.d/influxdb.list"
+  echo "The influxdata repo is already present. Updating apt repo."
 else
-  echo "Failed to add the influxdata repo to /etc/apt/sources.list.d/influxdb.list. Changes may have already been made."
+  echo "The data/file is not present on the system. Attempting to add it."
+  touch /etc/apt/sources.list.d/influxdb.list
+  echo "deb https://repos.influxdata.com/debian bullseye stable" | tee -a /etc/apt/sources.list.d/influxdb.list
   exit 0
 fi
 
