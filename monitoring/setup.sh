@@ -36,8 +36,8 @@ echo "deb https://repos.influxdata.com/debian bullseye stable" | tee -a /etc/apt
 if grep -q "deb https://repos.influxdata.com/debian bullseye stable/" /etc/apt/sources.list.d/influxdb.list; then
   echo "The influxdata repo was successfully added to /etc/apt/sources.list.d/influxdb.list"
 else
-  echo "Failed to add the influxdata repo to /etc/apt/sources.list.d/influxdb.list"
-  exit 1
+  echo "Failed to add the influxdata repo to /etc/apt/sources.list.d/influxdb.list. Changes may have already been made."
+  exit 0
 fi
 
 # Updates apt repositories.
