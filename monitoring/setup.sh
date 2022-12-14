@@ -3,8 +3,8 @@
 # Set the script to terminate if any commands fail.
 
 set -e
-echo Developer: RoachFire https://github.com/roachfire
-echo Usage: This script installs and configures some depedencies for the Telegraf application, based of off the install isnturctions found here: https://du.nkel.dev/blog/2021-05-05_proxmox_influxdb/.
+echo "Developer: RoachFire https://github.com/roachfire"
+echo "Usage: This script installs and configures some depedencies for the Telegraf application, based of off the install isnturctions found here: https://du.nkel.dev/blog/2021-05-05_proxmox_influxdb/."
 
 # This section makes the necessary edits to /etc/pve/status.cfg to tell Proxmox to report metrics to an internal Telegraf application.
 # Check if the file exists
