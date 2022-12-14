@@ -69,5 +69,14 @@ if ! apt-get install telegraf; then
   echo "Error: unable to install lm-sensors, please check logs for errors"
   exit 1
 else
-  echo "lm-sensors successfully installed. Continuing..."
+  echo "lm-sensors successfully installed. Attempting to download Telegraf.conf template from https://raw.githubusercontent.com/roachfire/roachlab/main/monitoring/telegraf.conf and backup original file."
+fi
+
+# Backs up the original Telegraf.conf just in case, then downloads the template from GitHub..
+if ! cp /etc/telegraf/telegraf.conf /etc/telegraf/telegraf.conf.bak; then
+  echo "Error, unable to backup original file."
+  exit 1
+else
+  mv telegraf.conf /etc/telegraf/telegraf.conf
+  echo "Operation completted. Refer back to documentation for further setup instructions."
 fi
