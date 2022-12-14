@@ -36,7 +36,6 @@ else
   echo "The data/file is not present on the system. Attempting to add it."
   touch /etc/apt/sources.list.d/influxdb.list
   echo "deb https://repos.influxdata.com/debian bullseye stable" | tee -a /etc/apt/sources.list.d/influxdb.list
-  exit 0
 fi
 
 # Updates apt repositories.
