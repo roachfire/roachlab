@@ -47,17 +47,19 @@ The next things are required for this setup to work.
 
 ## Creating our directories
 The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`. Use this same commmand to create a working directory for our project (something like /htpcproject/). Inside of the {SRVR} directory, implement the following file structure:
+```
 -Server
   -data
-  -media
-    -tv
-    -books
-    -movies
-    -music
+    -media
+     -tv
+     -books
+     -movies
+     -music
   -torrents
-    -complete
-    -incomplete
-    -resume
+     -complete
+     -incomplete
+     -resume
+ ```
  This file structure will prevent redundant downloads as we use our stack.
 
 ## Deploying our services
