@@ -63,7 +63,7 @@ else
 fi
 
 # Installs lm-sensors tool.
-if ! apt-get install telegraf; then
+if ! apt-get install lm-sensors watch; then
   echo "Error: unable to install lm-sensors, please check logs for errors"
   exit 1
 else
