@@ -75,14 +75,6 @@ services:
     volumes:
       - ${ROOT}/container_data/grafana:/var/lib/grafana
     restart: unless-stopped
-     
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: ${APPLICATIONS}
     
   bookstack:
     image: lscr.io/linuxserver/bookstack
