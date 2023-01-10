@@ -12,7 +12,6 @@ A fully-featured home theater application stack with services to automatically d
 - [Readarr](https://hub.docker.com/r/linuxserver/readarr): Readarr is a ebook collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new books from your favorite authors and will interface with clients and indexers to grab, sort, and rename them. 
 - [Calibre-Web]():
 - [Calibre]():
-- [Watchtower](https://hub.docker.com/r/containrrr/watchtower): A process for automating Docker container base image updates. Automatic updates can cause issues (they haven't in my experience, but you've been warned). If you're worried about updates breaking things, I recommend having working backups of everything and using a test environment to test updates to your services. Once you've tested your updates, enable the Watchtowever container to automatically update them (or you can use docker-compose).
 
 # Rationale
 This project was originally a fork of a project by [sebgl](https://github.com/sebgl/htpc-download-box) but after following his tutorial I encountered some issues with deployment and noticed some documentation that could've been improved upon. Thus I feel the changes I have made and plan on making are significant enough to warrant creating my own repo. The goal of this project is to create a home theater software stack with the least amount of work required by the user while providing the flexibility to accomodate those who do wish to change things. I hope you can see this focus in some of the changes I have made to sebgl's original work. All of this is not to say that sebgl's work is bad, but for someone like me who doesn't have the time nor expertise to figure out some of the steps required on my own, I needed a better solution. I hope that this works well for people in my own shoes. Now, let's get on with the show.
@@ -113,9 +112,6 @@ To configure Radarr, Readarr, and Lidarr, simply follow all of the steps above a
 
 ### Overseer, Calibre Web, Calibre, Bazarr
 COMING SOON!!
-
-### Watchtower
-No configuration is really needed here. Everything is set up to work with this application stack automatically. However, if you add additional applications and want them to also automatically update, you will need to add the names of the containers to the Watchtower section of the docker-compose.yml file.
 
 ### About Bazarr and nzbget
 I personally don't use these services, so I'll refer you back to the sebgl project linked in the first section for a setup guide.
