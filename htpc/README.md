@@ -57,7 +57,7 @@ The first thing you're going to want to do is create directories for our contain
      -books
      -movies
      -music
-  -torrents
+    -torrents 
      -complete
      -incomplete
      -resume
