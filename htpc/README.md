@@ -69,16 +69,6 @@ The first thing you're going to want to do is create directories for our contain
 You can either copy and paste from the docker-compose.yml and .env files in this repo or you can download them directly. `cd` into your project directory and `sudo nano .env` to create the .env file. Once there, you'll need to copy and paste the text from my file. Change the values for `TZ`, `ROOT`, and `SRVR` to ones that fit your setup. Values for `TZ` can be found [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) and the `ROOT` and `SRVR` values will be the directories you created previously. You can change the `PUID` and `PGID` if you want, but it's not necessary. Save and close our .env with CTRL + X. Confirm that you wish to save changes and that you like the file name. 
 Next, we need to set up our docker-compose.yml. `sudo nano docker-compose.yml` to create the file. Paste the text from my file into here. There's only a few things we'll need to change here. Scroll down to your `transmission`. Find the `environment` section. This is where you'll set up your VPN. Enter your provider's name, your username, and your password. I use Mullvad, so the values there are configured for a Mullvad user. If you have another provider, refer to the excellent documentation [here](https://haugene.github.io/docker-transmission-openvpn/supported-providers/) to configure the container for your provider. Then, go down to the `LOCAL_NETWORK` line. Enter the CIDR of your local network so that the Transmission container's web-UI can be accessed on your local network. That's it! Our services are ready to be deployed. Save and exit the docker-compose.yml and enter the command `docker-compose up -d`. Monitor the terminal to ensure that everything deploys properly. Once that's done, we can see the status of our containers with `docker ps`. Now, onto the application configuration.
 
-### Deployment through Portainer's "stacks" feature
-Typically, docker-compose.yml's are deployed through the docker-compose CLI command. However, Portainer has built-in support for deploying your Docker-Compose files. Portainer's built-in compose editor will point out errors in your .yaml/.yml and give you a simple interface to control administrative permissions.
-1. In the Portainer UI, go to the **Stacks** page and select **+ Add Stack**.
-2. Name the stack "htpc" and select the "Repository" build method.
-3. In the **Repository URL** section paste "https://github.com/roachfire/roachlab". Edit **Compose path** to say "htpc/docker-compose.yml".
-4. You can configure automatic updates if you want, but I really don't recommend this for repos you don't directly control.
-5. For **Environment variables**, copy the text from the `.env` file in the management directory and paste it into a text file. Edit the file where the assigned variable values are "Changeme", using the comments as instructions.
-6. Save the file as something easy to remember like "htpc.env". In the Portainer UI, select **Load variables from .env file** and select the saved `.env`.
-7. Verify that everything looks correct and then select **Deploy the stack**. Everything should deploy smoothly from there.
-
 ## Configuring our applications
 
 ### Prowlarr
