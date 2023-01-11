@@ -88,7 +88,7 @@ The first thing I like to set up is my indexers. Go to the Prowlarr WebUI by ent
 Enter "<dockerhostIPaddress>:32400/web" into your browser. You should see the Plex Media Server setup page show up. You'll be prompted to name your server and optionally configure the server for remote access outside of your network. I personally don't configure this setting as I use Tailscale to safely connect to my services from external networks. Next we need to configure Plex's library files. For Movies, make the library path `/data/movies` and for TV make it `/data/tv`. Your music library should be added to `/data/music`. The next thing I recommend configuring in Plex is going to `Settings` -> `Library`, and enabling the "Scan my library automatically" setting and the "Run a partial scan when changes are detected" settings.
 
 ### Sonarr
-**Note for *arr suite permissions: these apps will require permission to read and write to the /$SRVR/data/media/*. To make this simple, I recommend running `chmod 777 /$SRVR/data/media/*` on these directories to make sure permission is granted**
+**Note for *arr suite permissions: these apps will require permission to read and write to the /$SRVR/data/media/*. To make this simple, I recommend running `chmod 777 /$SRVR/data/media/*` on these directories from the host to make sure permission is granted**
 Now that we have our indexers and Plex set up, lets configure Sonarr. Sonarr can be accessed at "<dockerhostIPaddress>:8989"
 - Go to `Settings` -> `General` and create a username and password. Restart the application when prompted.
 - Once you refresh the page and login, navigate back to `General` if needed and copy the API Key.
