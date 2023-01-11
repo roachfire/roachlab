@@ -74,7 +74,8 @@ This container can be accessed at http://dockerhostipaddress:82/admin. Upon ente
 3. Once you're done there, you'll need to access your router's admin settings and set the IP address of the server running Pi-hole as your DNS server. Or you can set the Pi-hole host as your DNS server on a device-by-device basis. I recommend deploying a second instance of Pi-hole to serve as a backup in case your main instance fails.
 
 ### Fail2Ban
-Fail2Ban's setup is fairly involved and I still haven't fully wrapped my head around it. However, DB Tech on YouTube has a great tutorial for setting up Fail2Ban to watch your containers and ban IPs through Cloudflare that can be found [here](https://www.youtube.com/watch?v=Ha8NIAOsNvo).
+Fail2Ban's setup is fairly involved and I still haven't fully wrapped my head around it. However, DB Tech on YouTube has a great tutorial for setting up Fail2Ban to watch your containers and ban IPs through Cloudflare that can be found [here](https://www.youtube.com/watch?v=Ha8NIAOsNvo). A note on Fail2Ban however: please ensure that any services you're proxying are expecting the URL set through Nginx Proxy Manager as their external URLs to avoid HTTP errors which can cause a Fail2Ban Ban.
+
 ### Cloudflare tunnel
 Getting the tunnel started is fairly simple.
 
