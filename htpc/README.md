@@ -10,8 +10,9 @@ A fully-featured home theater application stack with services to automatically d
 - [nzbget](https://hub.docker.com/r/linuxserver/nzbget): Nzbget is a usenet downloader, written in C++ and designed with performance in mind to achieve maximum download speed by using very little system resources.
 - [Overseerr](https://hub.docker.com/r/linuxserver/overseerr): Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.
 - [Readarr](https://hub.docker.com/r/linuxserver/readarr): Readarr is a ebook collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new books from your favorite authors and will interface with clients and indexers to grab, sort, and rename them. 
-- [Calibre-Web]():
-- [Calibre]():
+- [Calibre-Web](https://hub.docker.com/r/linuxserver/calibre-web): Calibre-web is a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database. It is also possible to integrate google drive and edit metadata and your calibre library through the app itself.
+- [Calibre](https://hub.docker.com/r/linuxserver/calibre): Calibre is a powerful and easy to use e-book manager. Users say it's outstanding and a must-have. It'll allow you to do nearly everything and it takes things a step beyond normal e-book software. It's also completely free and open source and great for both casual users and computer experts.
+- [TubeSync](http://ghcr.io/meeb/tubesync): TubeSync is a PVR (personal video recorder) for YouTube. Or, like Sonarr but for YouTube (with a built-in download client). It is designed to synchronize channels and playlists from YouTube to local directories and update your media server once media is downloaded.
 
 # Rationale
 This project was originally a fork of a project by [sebgl](https://github.com/sebgl/htpc-download-box) but after following his tutorial I encountered some issues with deployment and noticed some documentation that could've been improved upon. Thus I feel the changes I have made and plan on making are significant enough to warrant creating my own repo. The goal of this project is to create a home theater software stack with the least amount of work required by the user while providing the flexibility to accomodate those who do wish to change things. I hope you can see this focus in some of the changes I have made to sebgl's original work. All of this is not to say that sebgl's work is bad, but for someone like me who doesn't have the time nor expertise to figure out some of the steps required on my own, I needed a better solution. I hope that this works well for people in my own shoes. Now, let's get on with the show.
@@ -19,21 +20,18 @@ This project was originally a fork of a project by [sebgl](https://github.com/se
 # Things I plan on adding:
 - A Tailscale docker container to facilate secure remote access to your services without opening any ports.
 - A firewall configuration guide to lockdown access to your applications.
-- Documentation for Readarr, Calibre-Web, and Calibre.
-- ~~A cloudflared docker container to facilitate secure remote access on devices that don't have Tailscale installed.~~ (Covered in my networking guide)
-- Adapting the project to be aimed primarily at NAS users.
 - ~~[Plex Requests](https://dediseedbox.com/wiki/knowledgebase/plex-requests/) to make it easier to add TV, movies, and music to Plex.~~ (Replaced with Overseerr)
 - ~~[Ombi](https://hub.docker.com/r/linuxserver/ombi/) to further enhance the request experience for those sharing their Plex servers with large amounts of users.~~ (replaced with Overseerr)
 
 # Before we get started...
 These are some recommendations that might make things a little easier for you, but **are not required** as everyone has their own system and workflow for maintaining their services.
-- The nzb360 app
+- The [nzb360 app](https://nzb360.com/) if you're on Android or [NZBClient](https://apps.apple.com/us/app/nzbclient-for-nzbget/id1178245637) if you're on iOS.
 - A hypervisor like [Proxmox](https://proxmox.com/en/) to manage the machine that will be hosting our services. While you can run these applications on a bare metal OS, Proxmox affords the user much more granular control over resource allocation, networking, and other aspects of the machine that can reduce a lot of headaches when troubleshooting.
-- An application like [Portainer](https://docs.portainer.io/start/install/server/docker/linux) to help manage the containers you'll be creating. This tool is invaluable for troubleshooting and monitoring your containers.
-- A separate storage server. It is always a good idea to keep your systems separated by roles. You can do this by making either separate VMs for the storage server and the home theater stack, or by using separate physical machines. This way, if one machine goes down you're not losing access to all aspects of your system, especially if your storage server hosts more than just your movies and tv.
+- An application like [Portainer](https://docs.portainer.io/start/install/server/docker/linux) to help manage the containers you'll be creating. This tool is invaluable for troubleshooting and monitoring your containers (in my opinion).
+- A separate storage server (NAS). It is always a good idea to keep your systems separated by roles. You can do this by making either separate VMs for the storage server and the home theater stack, or by using separate physical machines. This way, if one machine goes down you're not losing access to all aspects of your system, especially if your storage server hosts more than just your movies and tv.
 - A service like [Tailscale](https://tailscale.com/) to allow you to remotely manage your services (and facilitate secure remote streaming). You can find installation documentation for your OS [here](https://tailscale.com/download/). 
 - [Plex Pass](https://www.plex.tv/plex-pass/). This is Plex's Premium service that gives you access to useful features like unlimited mobile clients, hardware acceleration (useful for HDR tonemapping and transcoding), etc. The pricing isn't all that bad either. 
-- A decent graphics card or a [CPU that supports Intel Quicksync](https://www.edius.net/quicksync.html). If you're transcoding large streams with a lot of data per frame, you're going to want one of these things to help speed things up. 
+- A decent graphics card or a [CPU that supports Intel Quicksync](https://www.edius.net/quicksync.html). If you're transcoding large streams with a lot of data per frame, you're going to want one of these things to help speed things up. If you're running a server-grade CPU with a lot of cores you can probably get around this limitation.
 - A Debian-based machine for your Docker host. I run my services on a Ubuntu Server host, so this tutorial was designed for that operating environment.
 
 The next things are required for this setup to work.
@@ -41,7 +39,7 @@ The next things are required for this setup to work.
 - A free Plex account.
 - [Docker](https://docs.docker.com/engine/install/ubuntu/) and [Docker-Compose](https://docs.docker.com/compose/install/linux/) installed on your host system.
 - A VPN service. I recommend Mullvad, PIA, or Nord for this particular setup, but most should work just fine with some tweaking.
-- If you plan on using separate machines (virtual or physical) for your storage server and your docker host make sure that both have dedicated IP addresses so that they can always find each other in the event of a network or machine restart.
+- If you plan on using separate machines (virtual or physical) for your storage server and your docker host make sure that both have dedicated IP addresses so that they can always find each other in the event of a network or machine restart. Ensure they're on the same subnet/VLAN as well.
 - Plenty of RAM and storage. RAM is useful for caching large streams and downloads while storage is going to be useful for... You know, storing your data!
 
 # Let's begin!
@@ -62,6 +60,18 @@ The first thing you're going to want to do is create directories for our contain
      -resume
  ```
  This file structure will prevent redundant downloads as we use our stack.
+ 
+## Creating our users
+For security and organization's sake, we're going to give each of our services their own user account on the system. These commands will create the users we'll need:
+```
+sudo useradd plex && id plex
+sudo useradd calibre-web && id calibre-web
+sudo useradd calibre && id calibre
+sudo useradd tubesync && id tubesync
+sudo useradd overseerr && id overseerr
+sudo useradd abc && id abc
+```
+Note the UID's spit out after each command runs.
 
 ## Deploying our services
 
