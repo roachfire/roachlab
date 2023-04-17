@@ -45,21 +45,25 @@ The next things are required for this setup to work.
 # Let's begin!
 
 ## Creating our directories
-The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the {ROOT} variable in our .env file and one for the {SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. So, make a directory on your docker host and make one on your storage host and name them whatever you wish. This can be accomplished with `sudo mkdir /your/directory/here`. Use this same commmand to create a working directory for our project (something like /htpcproject/). Inside of the {SRVR} directory, implement the following file structure:
+The first thing you're going to want to do is create directories for our containers to store their data and to store media they download for us. For this stack, we'll need two. One for the ${ROOT} variable in our .env file and one for the ${SRVR} variable. Root is where *most* of our containers will store their configuration files and SRVR is where the media will be stored. 
+
+Use `sudo mkdir -p htpcproject/container_data/config` to create our ${ROOT} directory.
+
+User `sudo mkdir -p data/media/{books,tv,movies,music} data/downloads/{complete,incomplete,resume}` to create our ${SRVR} directory. Make sure you run this command wherever you plan on storing your downloads and media library. This command creats the below file structure:
+
 ```
--Server
-  -data
-    -media
-     -tv
-     -books
-     -movies
-     -music
-    -torrents 
-     -complete
-     -incomplete
-     -resume
- ```
- This file structure will prevent redundant downloads as we use our stack.
+data/
+├── downloads/
+│   ├── complete/
+│   ├── incomplete/
+│   └── resume/
+└── media/
+    ├── books/
+    ├── movies/
+    ├── music/
+    └── tv/
+```
+This file allows our containers to hardlink files from the download directory to the media library directory. Otherwise, Sonarr, Radarr, Lidarr, and Readarr would copy files from the downloads directory to the media library, taking up double the space. 
  
 ## Creating our users
 For security and organization's sake, we're going to give each of our services their own user account on the system. These commands will create the users we'll need:
@@ -71,7 +75,7 @@ sudo useradd tubesync && id tubesync
 sudo useradd overseerr && id overseerr
 sudo useradd abc && id abc
 ```
-Note the UID's spit out after each command runs.
+Write down the UIDs spit out after each command runs. We'll be using these to configure our .env file.
 
 ## Deploying our services
 
