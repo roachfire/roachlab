@@ -65,7 +65,7 @@ data/
 ```
 This file allows our containers to hardlink files from the download directory to the media library directory. Otherwise, Sonarr, Radarr, Lidarr, and Readarr would copy files from the downloads directory to the media library, taking up double the space. 
  
-## Creating our users
+## Creating our users and group
 For security and organization's sake, we're going to give each of our services their own user account on the system. These commands will create the users we'll need:
 ```
 sudo useradd plex && id plex
@@ -76,6 +76,8 @@ sudo useradd overseerr && id overseerr
 sudo useradd abc && id abc
 ```
 Write down the UIDs spit out after each command runs. We'll be using these to configure our .env file.
+
+Next, we're going to create a group called "mediaserver" to add our containers to. This will allow our directories to share permissions across multiple users. `sudo groupadd mediaserver && id mediaserver` will create the group and output it's ID. Write this down as well.
 
 ## Deploying our services
 
