@@ -83,7 +83,7 @@ Getting the tunnel started is fairly simple.
 1. Go to the [Cloudflare Tunnels page](https://dash.cloudflare.com/?to=/:account/:zone/traffic/argo-tunnel), then click **Create a tunnel**. Name it something descriptive, then click **Save tunnel**.
 2. On the next page, select **Docker** as the operating system. Then, copy the command that appears in the **Install and run a connector** section.
 3. On your docker host, paste and run the command in the command line. This will install and deploy our container, automatically connecting it to our Cloudflare account. Then, click *Next**.
-4. In the **Public Hostnames** section, enter "*.your.domain" to create wildcard domain entry. Then, enter the hostname or IP address of your NGINX Proxy Manager hsot, appending ":443" to the end of the address. Select `HTTPS` as the Service Type. Then click **Save hostname**. This will make Cloudflare forward traffic from NGINX Proxy Manager to our DNS.
+4. In the **Public Hostnames** section, enter "*.your.domain" to create wildcard domain entry. Then, enter the DNS record for your Nginx Proxy Manager instance (nginx.domain.tld for example). Select `HTTPS` as the Service Type. Then click **Save hostname**. This will make Cloudflare forward traffic from NGINX Proxy Manager to our DNS.
 
 #### Adding DNS records for our subdomains to Cloudflare
 1. Leaving the Cloudflare Tunnels tab open, go to your [Cloudflare Dashboard](https://dash.cloudflare.com/login) and select **DNS** from the sidebar.
