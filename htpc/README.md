@@ -132,6 +132,7 @@ Let's get Overseerr set up so our users can start requesting thing.
 - On the "Plex" tab, select your server from the dropdown, then select the libraries you want to sync.
 - On the "Services" tab, add the info for your Radarr and Sonarr settings to match what you configured earlier.
 - Configure the other tabs as you wish, but I didn't mess with these.
+- Overseerr will import users from those you've authorized for access to your Plex server. If you want to allow people to make requests to Sonarr and Radarr, have them make a Plex account and invite them to your server.
     
 # Finishing up
 To finish, let's make sure our services are working correctly. 
