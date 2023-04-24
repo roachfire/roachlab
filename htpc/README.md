@@ -90,14 +90,14 @@ Typically, docker-compose.yml's are deployed through the docker-compose CLI comm
 1. In the Portainer UI, go to the **Stacks** page and select **+ Add Stack**.
 2. Name the stack "htpc" and select the "Web Editor" build method.
 3. Copy the text in the docker-compose.yml contained in this repo and paste it into the web editor, then name your stack.
-4. Scroll down to your `transmission`. Find the `environment` section. This is where you'll set up your VPN. Enter your provider's name, your username, and your password. I use Mullvad, so the values there are configured for a Mullvad user. If you have another provider, refer to the excellent documentation [here](https://haugene.github.io/docker-transmission-openvpn/supported-providers/) to configure the container for your provider.
+4. Scroll down to your `transmission`. Find the `environment` section. This is where you'll set up your VPN. Enter your provider's name, your username, and your password. Refer to the excellent documentation [here](https://haugene.github.io/docker-transmission-openvpn/supported-providers/) to configure the container for your VPN provider.
 5. Then, go down to the `LOCAL_NETWORK` line. Enter the CIDR of your local network so that the Transmission container's web-UI can be accessed on your local network. That's it! Our services are ready to be deployed.
 6. Select "Deploy the stack" and wait for everything to deploy.
 
 ## Configuring our applications
 
 ### Prowlarr
-The first thing I like to set up is my indexers. Go to the Prowlarr WebUI by entering "dockerhostIPaddress:9696" into your browser. Next we want to do is go to `Settings` -> `General` and create a username and password. Restart as prompted. Next, we want to the `Indexers` section at the top of the left pane. Click `Add Indexer` and add the indexers you want to use. I typically sort by `en-US` for language and `Public` for privacy. Currently, I use 1337x, AnimeClipse, AniRena, kickasstorrents.to, and The Pirate Bay. Now we need to configure the rest of our applications.
+The first thing I like to set up is my indexers. Go to the Prowlarr WebUI by entering "dockerhostIPaddress:9696" into your browser. Next we want to do is go to `Settings` -> `General` and create a username and password. Restart as prompted. Next, we want to the `Indexers` section at the top of the left pane. Click `Add Indexer` and add the indexers you want to use. If you don't have any paid indexers, sort by `en-US` for language and `Public` for privacy. Now we need to configure the rest of our applications.
 
 ### Plex 
 **A note on Plex and VLANS: make sure that you access your Plex server from a device on the same VLAN for initial setup, as Plex does not allow connections from other VLAN by default. For example: if your Plex is on 192.168.20.0/24, it will not accept connections from 192.168.30.0/24**.
@@ -122,7 +122,16 @@ Finally, we can connect Plex to Sonnar.
 That's it! Sonarr is ready to go.
 
 ### Radarr, Readarr, and Lidarr
-To configure Radarr, Readarr, and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878","dockerhostIPaddress:8787", and "dockerhostIPaddress:8686", respectively. Remember that each application should use the folder in the `/data/media` directory that corresponds with the media they collect.
+To configure Radarr, Readarr, and Lidarr, simply follow all of the steps above as the applications are virtually the same. They can be found at "dockerhostIPaddress:7878","dockerhostIPaddress:8787", and "dockerhostIPaddress:8686", respectively. Remember that each application should use the folder in the `/data/media` directory that corresponds with the media they collect as the root.
+
+### Overseerr
+Let's get Overseerr set up so our users can start requesting thing.
+- Head over to "<dockerhostIPaddress>:5055" and login to your Plex account.
+- Click "Settings" in the sidebar and configure the General settings to suit your needs. Make sure the Application URL matches the URL you configure in your reverse proxy if you use one.
+- Configure the "Users" page to fit your needs.
+- On the "Plex" tab, select your server from the dropdown, then select the libraries you want to sync.
+- On the "Services" tab, add the info for your Radarr and Sonarr settings to match what you configured earlier.
+- Configure the other tabs as you wish, but I didn't mess with these.
     
 # Finishing up
 To finish, let's make sure our services are working correctly. 
@@ -131,7 +140,8 @@ To finish, let's make sure our services are working correctly.
 - Search for a show you like and click on it. Make sure that the media is being stored in the proper root folder for the service.
 - Select the monitor settings you want and your preferred quality profile (for testing purposes, I recommend leaving the quality profile at "Any". 
 - Check `Start search for missing <mediatype>` and click `Add <medianame>`. 
-- Go back to the Transmission webUI and see if Torrents for your meida start to appear.
+- Go back to the Transmission webUI and see if Torrents for your media start to appear.
 - Wait for the Torrents to finish and see if the media starts to show up in your Plex Media Server. 
 - Repeat the test for the rest of your applications.
-If everything is working properly, your htpc setup should done and ready to go. 
+- Mess around with the quality profiles to suit your needs.
+If everything is working properly, your htpc setup should done and ready to go.
