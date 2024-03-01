@@ -1,0 +1,80 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        #LDAP Config
+        # gitlab_rails['ldap_enabled'] = true
+        # gitlab_rails['ldap_servers'] = {
+          # 'main' => {
+            # 'label' => '',
+            # 'host' =>  '$ldaphost',
+            # 'port' => 389,
+            # 'uid' => 'sAMAccountName',
+            # 'bind_dn' => 'CN=User,CN=Users,DC=domain,DC=tld',
+            # 'password' => '$binduserpass',
+            # 'encryption' => 'plain',
+            # 'verify_certificates' => true,
+            # 'timeout' => 10,
+            # 'active_directory' => true,
+            # 'user_filter' => '(employeeType=developer)',
+            # 'base' => 'dc=domain,dc=tld',
+            # 'lowercase_usernames' => 'false',
+            # 'retry_empty_result_with_codes' => [80],
+            # 'allow_username_or_email_login' => true,
+            # 'block_auto_created_users' => false
+          # }
+        # }    
+        # gitlab_rails['smtp_enable'] = true
+        # gitlab_rails['smtp_address'] = "${SMPTserver}"
+        # gitlab_rails['smtp_port'] = 587
+        # gitlab_rails['smtp_user_name'] = "${STMPTuser}"
+        # gitlab_rails['smtp_password'] = "${SMTPpass}"
+        # gitlab_rails['smtp_domain'] = "${SMPTserver}"
+        # gitlab_rails['smtp_authentication'] = "plain"
+        # gitlab_rails['smtp_enable_starttls_auto'] = true
+        # gitlab_rails['smtp_tls'] = false
+        # gitlab_rails['gitlab_email_from'] = 'gitlab@domain.tld'
+        # gitlab_rails['gitlab_email_reply_to'] = 'noreply@domain.tld'
+
+        # gitlab_rails['gitlab_default_theme'] = 2
+        
+        # Add any other gitlab.rb configuration here, each on its own line
+        external_url 'https://gitlab.domain.tld'
+    ports:
+      - '85:80'
+      - '5443:443'
+      - '22:22'
+    volumes:
+      - ${ROOT}/gitlab/config:/etc/gitlab
+      - ${ROOT}/gitlab/logs:/var/log/gitlab
+      - ${ROOT}/data:/var/opt/gitlab
+    shm_size: '256m'
+
+  build-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: build-runner
+    depends_on:
+      gitlab:
+        condition: service_healthy
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - ${ROOT}/gitlab-build-runner/config:/etc/gitlab-runner
+    extra_hosts:
+      - ${gitlaburl}:${gitlabhostip}
+      
+  test-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: test-runner
+    depends_on:
+      gitlab:
+        condition: service_healthy
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - ${ROOT}/gitlab-test-runner/config:/etc/gitlab-runner
+    extra_hosts:
+      - ${gitlaburl}:${gitlabhostip}
+  
