@@ -14,7 +14,6 @@ services:
       volumes:
         - overseerr:/config # Folder where Overseerr's configuration files are stored.
 
-
     prowlarr:
       container_name: prowlarr
       image: lscr.io/linuxserver/prowlarr:latest
