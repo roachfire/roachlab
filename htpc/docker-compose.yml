@@ -1,216 +1,165 @@
 version: "3.4"
 services:
 
-  transmission:
-    container_name: transmission-openvpn
-    image: haugene/transmission-openvpn:latest
-    cap_add:
-      - NET_ADMIN # Don't change.
-    devices:
-      - /dev/net/tun # Don't change.
-    restart: always
-    dns: # This section sets the DNS servers for your container to use. Recommend you don't touch this.
-      - 8.8.8.8
-      - 8.8.4.4
-    ports:
-      - "9091:9091" 
-      # - "8888:8888" # proxy support
-    volumes:
-      - ${SRVR}/data/downloads:/downloads # Folder where our downloaded files will end up.
-      - ${ROOT}/config/transmission:/config # Folder where Transmission's configuration files will be stored.
-      - ${SRVR}/data/downloads/torrent-blackhole:/data/watch # Folder for Tranmission to watch for .magnet files to automatically download.
-    environment:
-      - CREATE_TUN_DEVICE=true # Don't change.
-      - TRANSMISSION_DOWNLOAD_DIR=/downloads/complete # Tells Transmission where complete downloads will be stored.
-      - TRANSMISSION_INCOMPLETE_DIR=/downloads/incomplete # Tells Transmission where incomplete downloads will be stored.
-      - TRANSMISSION_HOME=/config # Tells Transmission it's settings/config files will be stored.
-      - TRANSMISSION_RESUME_DIR=/downloads/resume # Tells Transmission where resume files will be stored.
-      - OPENVPN_PROVIDER=Changeme # Enter your VPN provider's name here.
-      - OPENVPN_CONFIG=Changeme # Sets your openvpn config file.
-      - OPENVPN_USERNAME=Changeme # Enter your VPN username here.
-      - OPENVPN_PASSWORD=Changeme # Enter your VPN password here. 
-      - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60 # Sets how long the VPN can be disconnected before the container exits.
-      - LOCAL_NETWORK=192.168.20.0/24, 192.168.1.0/24 #Configure your local network to broadcast Transmission outside of the VPN connection.
-      - TZ=${TZ}
-      - DISABLE_PORT_UPDATER=yes 
-      - TRANSMISSION_WEB_UI=flood-for-transmission # Chooses the design of the Web-UI used by Transmission.
-   # sysctls:
-       # - "net.ipv6.conf.all.disable_ipv6=0" # Use this to disable IPv6 if you don't use it. Comment it out otherwise.
+    overseerr:
+      image: lscr.io/linuxserver/overseerr:latest
+      container_name: overseerr
+      restart: unless-stopped
+      ports:
+        - 5055:5055
+      environment:
+        - PUID=${OVRSRPUID} # User ID for user "overseerr"
+        - PGID=${PGID}
+        - TZ=${TZ} 
+      volumes:
+        - overseerr:/config # Folder where Overseerr's configuration files are stored.
 
-  calibre-web:
-    image: lscr.io/linuxserver/calibre-web:latest # Sets which docker image to pull for the container.
-    container_name: calibre-web # Sets the container name.
-    restart: unless-stopped  # Sets the restart policy for the container. By default, container will always restart unless stopped by user intervention.
-    ports:
-      - 8083:8083 # Sets the external:internal ports to be exposed.
-    environment:
-      - PUID=${CALBRWBPUID} # User ID for user "calibre-web"
-      - PGID=${PGID} # Default group id, defined in .env.
-      - TZ=${TZ} # Timezone, defined in .env.
-      - DOCKER_MODS=linuxserver/mods:universal-calibre #optional
-      - OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
-    volumes:
-      - ${ROOT}/config/calibre-web/:/config # Folder where Calibre-Web's configuration files will be stored.
-      - ${SRVR}/data/media/books:/books # Folder where your books are stored.
-    
-  calibre:
-    image: lscr.io/linuxserver/calibre:latest
-    container_name: calibre
-    restart: unless-stopped  
-    ports:
-      - 8080:8080
-      - 8081:8081
-    security_opt:
-      - seccomp:unconfined #optional
-    environment:
-      - PUID=${CLBRPUID} # User ID for user "calibre".
-      - PGID=${PGID} 
-      - TZ=${TZ}
-     # - PASSWORD=${CALIBRE_PWD}
-     # - CLI_ARGS= #optional
-    volumes:
-      - ${ROOT}/config/calibre:/config # Folder where Calibre's configuration files will be stored.
-      - ${SRVR}/data/media/books:/books # Folder where your books are stored.
-    
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
-    restart: unless-stopped  
-    ports:
-      - 8787:8787 
-    environment:
-      - PUID=${ABC} # default user id for user 'abc', defined in .env.
-      - PGID=${PGID}
-      - TZ=${TZ} 
-    volumes:
-      - ${ROOT}/config/readarr:/config # Folder where Readarr's configuration files will be stored.
-      - ${SRVR}/data:/data # Gives Readarr access to "data" directory in our media server.
- 
-  prowlarr:
-    container_name: prowlarr
-    image: lscr.io/linuxserver/prowlarr:latest
-    restart: unless-stopped
-    ports:
-      - 9696:9696
-    environment:
-      - PUID=${ABC}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${ROOT}/config/prowlarr:/config # Folder where Prowlarr's configuration files are stored.
-      - ${SRVR}/data/downloads/torrent-blackhole:/downloads # Place where .torrent files are placed so that they can be detected by Transmission.
 
-  nzbget:
-    container_name: nzbget
-    image: linuxserver/nzbget:latest
-    restart: unless-stopped
-    ports:
-      - 6789:6789
-    environment:
-      - PUID=${ABC}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${ROOT}/config/nzbget:/config # Folder where nzbget's configuration files are stored.
-      - ${SRVR}/data/downloads:/downloads # Folder where nzbget places its downloads.
+    prowlarr:
+      container_name: prowlarr
+      image: lscr.io/linuxserver/prowlarr:latest
+      restart: unless-stopped
+      ports:
+        - 9696:9696
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID}
+        - TZ=${TZ}
+      volumes:
+        - prowlarr:/config # Folder where Prowlarr's configuration files are stored.
+        - ${SRVR}/data/downloads/ongoing:/downloads # Place where .torrent files are placed so that they can be detected by Transmission.
 
-  sonarr:
-    container_name: sonarr
-    image: linuxserver/sonarr:latest
-    restart: unless-stopped
-    ports:
-      - 8989:8989
-    environment:
-      - PUID=${ABC}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${ROOT}/config/sonarr:/config # Folder where Sonarr's configuration files are stored.
-      - ${SRVR}/data:/data # Gives Sonarr access to "data" directory in our media server.
+    sonarr:
+      container_name: sonarr
+      image: linuxserver/sonarr:latest
+      restart: unless-stopped
+      ports:
+        - 8989:8989
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID}
+        - TZ=${TZ}
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - sonarr:/config # Folder where Sonarr's configuration files are stored.
+        - ${SRVR}/data:/data # Gives Sonarr access to "data" directory in our media server.
+
+    radarr:
+      container_name: radarr
+      image: linuxserver/radarr:latest
+      restart: unless-stopped
+      ports:
+        - 7878:7878
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID}
+        - TZ=${TZ}
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - radarr:/config # Folder where Radarr's configuration files are stored.
+        - ${SRVR}/data:/data # Gives Radarr access to "data" directory in our media server.
       
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    restart: unless-stopped
-    ports:
-      - 8686:8686
-    environment:
-      - PUID=${ABC}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${ROOT}/config/lidarr:/config # Folder where Lidarr's configuration files are stored.
-      - ${SRVR}/data:/data  # Gives Lidarr access to "data" directory in our media server.
-
-  radarr:
-    container_name: radarr
-    image: linuxserver/radarr:latest
-    restart: unless-stopped
-    ports:
-      - 7878:7878
-    environment:
-      - PUID=${ABC}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${ROOT}/config/radarr:/config # Folder where Radarr's configuration files are stored.
-      - ${SRVR}/data:/data # Gives Radarr access to "data" directory in our media server.
+    lidarr:
+      image: lscr.io/linuxserver/lidarr:latest
+      container_name: lidarr
+      restart: unless-stopped
+      ports:
+        - 8686:8686
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID}
+        - TZ=${TZ}
+      volumes:
+        - lidarr:/config # Folder where Lidarr's configuration files are stored.
+        - ${SRVR}/data:/data  # Gives Lidarr access to "data" directory in our media server.
   
-  bazarr:
-    container_name: bazarr
-    image: linuxserver/bazarr
-    restart: unless-stopped
-    ports:
-      - 6767:6767
-    environment:
-      - PUID=${ABC}
-      - PGID=${PGID} 
-    volumes:
-    - ${ROOT}/config/bazarr:/config # Folder where Bazarr's configuration files are stored.
-    - ${SRVR}/data/media:/data/media # Gives Bazarr access to "data/media" directory in our media server.
-  
-  overseerr:
-    image: lscr.io/linuxserver/overseerr:latest
-    container_name: overseerr
-    restart: unless-stopped
-    ports:
-      - 5055:5055
-    environment:
-      - PUID=${OVRSRPUID} # User ID for user "overseerr"
-      - PGID=${PGID}
-      - TZ=${TZ} 
-    volumes:
-      - ${ROOT}/config/overseerr:/config # Folder where Overseerr's configuration files are stored.
+    bazarr:
+      container_name: bazarr
+      image: linuxserver/bazarr
+      restart: unless-stopped
+      ports:
+        - 6767:6767
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID} 
+      volumes:
+      - bazarr:/config # Folder where Bazarr's configuration files are stored.
+      - ${SRVR}/data/media:/data/media # Gives Bazarr access to "data/media" directory in our media server.
 
-  plex-server:
-    image: plexinc/pms-docker:latest
-    container_name: plex-server
-    restart: unless-stopped
-    ports:
-      - 32400:32400
-    environment:
-      - PUID=${PLXPUID} # User ID for user "plex"
-      - PGID=${PGID}
-      - TZ=${TZ}
+
+
+#4K Indexers
+
+    sonarr4K:
+      container_name: sonarr4K
+      image: linuxserver/sonarr:latest
+      restart: unless-stopped
+      ports:
+        - 8990:8989
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID}
+        - TZ=${TZ}
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - sonarr4K:/config # Folder where Sonarr's configuration files are stored.
+        - ${SRVR}/data:/data # Gives Sonarr access to "data" directory in our media server.
+
+    radarr4K:
+      container_name: radarr4K
+      image: linuxserver/radarr:latest
+      restart: unless-stopped
+      ports:
+        - 7890:7878
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID}
+        - TZ=${TZ}
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - radarr4K:/config # Folder where Radarr's configuration files are stored.
+        - ${SRVR}/data:/data # Gives Radarr access to "data" directory in our media server.
+        
+#Download clients
+
+    tubesync:
+      image: ghcr.io/meeb/tubesync:latest
+      container_name: tubesync
+      restart: unless-stopped
+      ports:
+        - 4848:4848
+      environment:
+        - TZ=${TZ} # timezone, defined in .env
+        - PUID=${TBSNCPUID} # User ID for user "tubesync"
+        - PGID=${PGID}
+        - HTTP_USER=Changeme # Username for Web-UI
+        - HTTP_PASS=Changeme # Password for Web-UI
+      volumes:
+        - tubesync:/config # Folder where Tubesync's configuration files are stored.
+        - ${SRVR}/data/downloads/complete:/downloads # Gives Tubesync access to our "downloads" directory.
+
+    nzbget:
+      container_name: nzbget
+      image: linuxserver/nzbget:latest
+      restart: unless-stopped
+      ports:
+        - 6789:6789
+      environment:
+        - PUID=${ABC}
+        - PGID=${PGID}
+        - TZ=${TZ}
+      volumes:
+        - nzbget:/config # Folder where nzbget's configuration files are stored.
+        - ${SRVR}/data/downloads:/downloads # Folder where nzbget places its downloads.
+
     volumes:
-      - ${ROOT}/config/plex/db:/config # Folder where our Plex database is stored.
-      - ${SRVR}/config/plex/transcode:/transcode # Directory for temporary transcoded files.
-      - ${SRVR}/data/media:/data # Directory of our media library.
-      
-  tubesync:
-    image: ghcr.io/meeb/tubesync:latest
-    container_name: tubesync
-    restart: unless-stopped
-    ports:
-      - 4848:4848
-    environment:
-      - TZ=${TZ} # timezone, defined in .env
-      - PUID=${TBSNCPUID} # User ID for user "tubesync"
-      - PGID=${PGID}
-      - HTTP_USER=Changeme # Username for Web-UI
-      - HTTP_PASS=Changeme # Password for Web-UI
-    volumes:
-      - ${ROOT}/config/tubesync:/config # Folder where Tubesync's configuration files are stored.
-      - ${SRVR}/data/downloads/complete:/downloads # Gives Tubesync access to our "downloads" directory.
+      - overseerr:
+      - sonarr:
+      - radarr:
+      - lidarr:
+      - bazarr:
+      - readarr:
+      - sonarr4K:
+      - radarr4K:
+      - tubesync:
+      - nzbget: 
