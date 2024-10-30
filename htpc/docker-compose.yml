@@ -151,14 +151,14 @@ services:
         - nzbget:/config # Folder where nzbget's configuration files are stored.
         - ${SRVR}/data/downloads:/downloads # Folder where nzbget places its downloads.
 
-    volumes:
-      - overseerr:
-      - sonarr:
-      - radarr:
-      - lidarr:
-      - bazarr:
-      - readarr:
-      - sonarr4K:
-      - radarr4K:
-      - tubesync:
-      - nzbget: 
+volumes:
+      overseerr:
+      sonarr:
+      radarr:
+      lidarr:
+      bazarr:
+      readarr:
+      sonarr4K:
+      radarr4K:
+      tubesync:
+      nzbget: 
