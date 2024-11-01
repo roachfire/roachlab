@@ -1,0 +1,41 @@
+services:
+    uptime-kuma:
+        restart: always
+        ports:
+            - 3001:3001
+        volumes:
+            - uptime-kuma:/app/data
+        container_name: uptime-kuma
+        image: louislam/uptime-kuma:1
+
+    grafana:
+      image: grafana/grafana-enterprise
+      container_name: grafana
+      restart: unless-stopped
+      ports:
+       - '3000:3000'
+      volumes:
+        - grafana:/var/lib/grafana
+
+    influxdb:
+      image: influxdb:latest
+      container_name: influxdb
+      volumes:
+        - influxdb:/var/lib/influxdb2:rw
+#    env_file:
+#      - .env
+#    entrypoint: ["./entrypoint.sh"]
+      ports:
+        - 8086:8086
+      restart: unless-stopped
+
+    prometheus:
+      container_name: prometheus
+      image: prom/prometheus
+      ports:
+        - 9090:9090
+
+volumes:
+    uptime-kuma:
+    grafana:
+    influxdb:
