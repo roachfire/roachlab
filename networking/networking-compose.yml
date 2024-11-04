@@ -1,4 +1,3 @@
-version: '3'
 services:
   
   npm:
@@ -10,7 +9,7 @@ services:
       - '81:81'
       - '443:443'
     volumes:
-      - .${ROOT}/nginx-proxy-manager/data:/data
+      - npm:/data
       - ./letsencrypt:/etc/letsencrypt
 
   pihole:
@@ -31,20 +30,13 @@ services:
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     restart: unless-stopped
 
-  fail2ban:
-    image: crazymax/fail2ban:latest
-    container_name: fail2ban
-    network_mode: "host"
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    volumes:
-      - "${ROOT}/config/fail2ban:/data"
-      - "/var/log/auth.log:/var/log/auth.log:ro"
-      - "${ROOT}/nginx-proxy-manager/data/logs/:/log/npm/:ro"
-    restart: always
-    environment:
-    - TZ=${TZ}
-    - F2B_LOG_TARGET=STDOUT
-    - F2B_LOG_LEVEL=INFO
-    - F2B_DB_PURGE_AGE=1d
+
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token eyJhIjoiODc3ODY2NWI0MTE0NmY2MzllMmU1OTlmNzZiZWU2NTYiLCJ0IjoiZWY0YzM2NzYtOWM3Ni00ZTNkLTliNDgtY2U2ZjQ4YWE2ZDI5IiwicyI6IllUVmlNbU13T1RjdE56QXlOaTAwTm1aaExXSXhNVFl0TnpReE1qUmxPR0psWW1aaSJ9
+    restart: unless-stopped
+
+volumes:
+  npm:
+  pi-hole:
