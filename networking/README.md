@@ -2,7 +2,6 @@
 A set of applications to assist in building and managing our network. This combination of services will intelligently handle simple local access and secure remote access for all of your selfhosted applications, no port-forwarding or firewall configuration required.
 - [Nginx Proxy Manager](https://hub.docker.com/r/jc21/nginx-proxy-manager): This project comes as a pre-built docker image that enables you to easily forward to your websites running at home or otherwise, including free SSL, without having to know too much about Nginx or Letsencrypt.
 - [Pi-hole](https://hub.docker.com/r/pihole/pihole): The Pi-hole® is a DNS sinkhole that protects your devices from unwanted content, without installing any client-side software.
-- [Fail2Ban](https://hub.docker.com/r/linuxserver/fail2ban): Fail2ban is a daemon to ban hosts that cause multiple authentication errors.
 - [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/): Protect your web servers from direct attack. From the moment an application is deployed, developers and IT spend time locking it down — configuring ACLs, rotating IP addresses, and using clunky solutions like GRE tunnels. There’s a simpler and more secure way to protect your applications and web servers from direct attacks: Cloudflare Tunnel. Ensure your server is safe, no matter where it’s running: public cloud, private cloud, Kubernetes cluster, or even a Mac mini under your TV.
 
 # Rationale
@@ -72,9 +71,6 @@ This container can be accessed at http://dockerhostipaddress:82/admin. Upon ente
 1. Enter the password you added to the `.env` file to access the UI. Pi-hole is preconfigured with a blocklist and pretty much every setting you'll need, but feel free to add other blocklists and mess around with the settings when we're finished here.
 2. Expand **Local DNS** in the sidebar and select **DNS records**. You'll be taken to a page where you can add local DNS redirect records. Add all of the services you self-host, including those that you don't want exposed to the web, entering "<servicename>.your.domain" in the **Domain:** box and the IP address of the server hosting your NGINX Proxy Manager instance in the **IP Address:** box.
 3. Once you're done there, you'll need to access your router's admin settings and set the IP address of the server running Pi-hole as your DNS server. Or you can set the Pi-hole host as your DNS server on a device-by-device basis. I recommend deploying a second instance of Pi-hole to serve as a backup in case your main instance fails.
-
-### Fail2Ban
-Fail2Ban's setup is fairly involved and I still haven't fully wrapped my head around it. However, DB Tech on YouTube has a great tutorial for setting up Fail2Ban to watch your containers and ban IPs through Cloudflare that can be found [here](https://www.youtube.com/watch?v=Ha8NIAOsNvo). A note on Fail2Ban however: please ensure that any services you're proxying are expecting the URL set through Nginx Proxy Manager as their external URLs to avoid HTTP errors which can cause a Fail2Ban Ban.
 
 ### Cloudflare tunnel
 Getting the tunnel started is fairly simple.
