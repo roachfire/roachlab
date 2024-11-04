@@ -37,7 +37,5 @@ Typically, docker-compose.yml's are deployed through the docker-compose CLI comm
 
 ## Configuring our applications
 For Bookstack and Snipe-IT, configuration is going to be highly dependent on your use-case and goals. With this variance in mind, please refer to the excellent documentation for [Snipe-IT](https://snipe-it.readme.io/docs) and [Bookstack](https://www.bookstackapp.com/docs/). For the rest of our services, follow along below.
-
-The rest of the management stack is going to handle monitoring our Proxmox host, our management virtual machine, and the containers deployed on it.
 ### 
 
